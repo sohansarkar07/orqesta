@@ -165,7 +165,7 @@ export function Nav() {
                   e.currentTarget.style.borderColor = '#C2D9BC';
                 }}
                 >
-                  Get Bundle
+                  Get MCP Bundle
                 </button>
               </Link>
               <Link to="/app">
