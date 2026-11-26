@@ -52,7 +52,7 @@ function Hero() {
     <section style={{
       minHeight: 'calc(100vh - 60px)',
       display: 'grid',
-      gridTemplateColumns: '1fr 1fr',
+      gridTemplateColumns: '1.1fr 1fr',
       overflow: 'hidden',
     }}>
       {/* Left — text */}
@@ -60,80 +60,222 @@ function Hero() {
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
-        padding: '80px 64px 80px 80px',
-        gap: '32px',
+        padding: '80px 72px 80px 96px',
+        gap: '28px',
+        maxWidth: '660px',
       }}>
-        {/* Eyebrow */}
-        <div style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '8px',
-          background: 'var(--sage-pale)',
-          border: '1px solid #C2D9BC',
-          borderRadius: '100px',
-          padding: '5px 14px',
-          width: 'fit-content',
-        }}>
-          <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--sage)', display: 'block' }} />
-          <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--olive)', letterSpacing: '0.04em', textTransform: 'uppercase' }}>
-            Flagsmith Configuration Safety
-          </span>
-        </div>
-
         {/* Heading */}
         <div>
           <h1 style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(40px, 5vw, 64px)',
+            fontSize: 'clamp(48px, 6vw, 72px)',
             fontWeight: 500,
             lineHeight: 1.08,
-            letterSpacing: '-0.02em',
+            letterSpacing: '-0.03em',
             color: 'var(--ink-900)',
+            marginBottom: '24px',
           }}>
-            Ship flags with<br />
-            <em style={{ fontStyle: 'italic', color: 'var(--olive)' }}>confidence.</em>
+            Detect drift.<br />
+            Sync safely.<br />
+            Ship with <em style={{ fontStyle: 'italic', color: 'var(--olive)' }}>confidence.</em>
           </h1>
           <p style={{
-            marginTop: '20px',
-            fontSize: '17px',
-            lineHeight: 1.65,
+            fontSize: '18px',
+            lineHeight: 1.6,
             color: 'var(--ink-500)',
-            maxWidth: '400px',
+            maxWidth: '480px',
             fontWeight: 300,
           }}>
-            Orqesta detects configuration drift, investigates changes with structured
-            before-and-after history, and enforces your team's policies — before
-            anything reaches production.
+            Orqesta brings configuration safety to Flagsmith. Compare environments,
+            investigate changes with forensics, and enforce policies — all before
+            production deploys.
           </p>
         </div>
 
         {/* CTA row */}
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '8px' }}>
           <Link to="/app">
-            <Button variant="primary" size="lg">Open Dashboard</Button>
+            <Button variant="primary" size="lg" style={{ fontSize: '15px', padding: '14px 32px' }}>
+              Launch Dashboard
+            </Button>
           </Link>
           <a href="https://github.com/sohansarkar07/orqesta" target="_blank" rel="noopener noreferrer">
-            <Button variant="secondary" size="lg">
+            <Button variant="secondary" size="lg" style={{ fontSize: '15px', padding: '14px 24px', gap: '10px' }}>
               <GitHubIcon />
-              View on GitHub
+              GitHub
             </Button>
           </a>
         </div>
 
-        {/* Social proof line */}
-        <p style={{ fontSize: '12px', color: 'var(--ink-300)', letterSpacing: '0.02em' }}>
-          Open-source · Self-hosted compatible · 76 unit tests
-        </p>
+        {/* Meta tags */}
+        <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
+          {['Open Source', 'Self-Hosted Ready', '95 Tests'].map((tag) => (
+            <span key={tag} style={{
+              fontSize: '11px',
+              fontWeight: 500,
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              color: 'var(--ink-300)',
+              padding: '6px 12px',
+              background: 'var(--ivory)',
+              borderRadius: '100px',
+              border: 'var(--border-light)',
+            }}>
+              {tag}
+            </span>
+          ))}
+        </div>
       </div>
 
-      {/* Right — illustration */}
+      {/* Right — interactive demo panel */}
       <div style={{
-        background: 'var(--ivory-mid)',
+        background: 'linear-gradient(135deg, #E8E4DC 0%, #D6D2CA 100%)',
         position: 'relative',
         overflow: 'hidden',
         borderLeft: 'var(--border)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '64px 48px',
       }}>
-        <LandscapeIllustration />
+        {/* Background texture */}
+        <div style={{
+          position: 'absolute',
+          inset: 0,
+          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 1px)',
+          backgroundSize: '24px 24px',
+          pointerEvents: 'none',
+        }} />
+
+        {/* Demo card — drift comparison */}
+        <div style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: '480px',
+          background: 'white',
+          borderRadius: '12px',
+          boxShadow: '0 20px 60px rgba(26,25,22,0.15), 0 4px 12px rgba(26,25,22,0.08)',
+          overflow: 'hidden',
+        }}>
+          {/* Card header */}
+          <div style={{
+            padding: '20px 24px',
+            borderBottom: 'var(--border-light)',
+            background: 'var(--ivory)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#5B8A4A' }} />
+              <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--ink-700)', fontFamily: '"SF Mono", monospace' }}>
+                COMPARE RESULTS
+              </span>
+            </div>
+            <div style={{
+              padding: '4px 10px',
+              background: 'var(--status-warn-bg)',
+              borderRadius: '100px',
+              fontSize: '11px',
+              fontWeight: 600,
+              color: 'var(--status-warn)',
+            }}>
+              4 DIFFERENCES
+            </div>
+          </div>
+
+          {/* Environment labels */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: '1fr auto 1fr',
+            padding: '16px 24px 12px',
+            alignItems: 'center',
+            gap: '12px',
+            borderBottom: 'var(--border-light)',
+            background: 'var(--ivory)',
+          }}>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--sage)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Staging</span>
+            <span style={{ fontSize: '14px', color: 'var(--ink-300)' }}>→</span>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--olive)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Production</span>
+          </div>
+
+          {/* Drift rows */}
+          <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {[
+              { flag: 'checkout_redesign', type: 'Enabled state', color: '#D9C88C' },
+              { flag: 'dark_mode', type: 'Value change', color: '#A8C49A' },
+              { flag: 'new_onboarding', type: 'Missing in target', color: '#D9BCBC' },
+              { flag: 'api_rate_limit', type: 'Value change', color: '#A8C49A' },
+            ].map((item, i) => (
+              <div key={i} style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr auto',
+                gap: '12px',
+                alignItems: 'center',
+                padding: '12px 16px',
+                background: 'var(--ivory)',
+                borderRadius: '8px',
+                border: 'var(--border-light)',
+              }}>
+                <div>
+                  <div style={{ fontSize: '13px', fontWeight: 500, fontFamily: '"SF Mono", monospace', color: 'var(--ink-900)' }}>
+                    {item.flag}
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'var(--ink-400)', marginTop: '3px' }}>
+                    {item.type}
+                  </div>
+                </div>
+                <div style={{
+                  width: '8px',
+                  height: '8px',
+                  borderRadius: '50%',
+                  background: item.color,
+                }} />
+              </div>
+            ))}
+          </div>
+
+          {/* Footer action */}
+          <div style={{
+            padding: '14px 24px',
+            borderTop: 'var(--border-light)',
+            background: 'var(--ivory)',
+            display: 'flex',
+            justifyContent: 'flex-end',
+          }}>
+            <button style={{
+              padding: '8px 16px',
+              background: 'var(--ink-900)',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '12px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              transition: 'opacity 0.15s',
+            }}>
+              Generate Sync Plan →
+            </button>
+          </div>
+        </div>
+
+        {/* Floating label */}
+        <div style={{
+          position: 'absolute',
+          bottom: '32px',
+          right: '32px',
+          padding: '8px 14px',
+          background: 'rgba(255,255,255,0.9)',
+          borderRadius: '100px',
+          fontSize: '10px',
+          fontWeight: 600,
+          letterSpacing: '0.08em',
+          textTransform: 'uppercase',
+          color: 'var(--ink-500)',
+          boxShadow: '0 2px 8px rgba(26,25,22,0.1)',
+        }}>
+          Live Demo
+        </div>
       </div>
     </section>
   );
