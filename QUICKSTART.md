@@ -1,282 +1,225 @@
-# orqesta Quick Start — Full Demo Scenario
+# 🚀 Orqesta — Quick Start (5 Minutes)
 
-This guide takes you from zero to a complete orqesta demo in 10 minutes.
+**For Toggle Wars Hackathon Judges & Users**
+
+This guide gets Orqesta + self-hosted Flagsmith running in one command.
 
 ---
 
-## Step 1: Choose Your Flagsmith Instance
+## ⚡ Option 1: Docker Compose (Recommended)
 
-### Option A: Flagsmith Cloud (Recommended — Zero Setup)
+Runs **self-hosted Flagsmith** + **Orqesta** together.
 
-1. Go to https://app.flagsmith.com/signup
-2. Create a free account
-3. Skip to **Step 3** below
+### Prerequisites
+- Docker + Docker Compose installed
+- 5 minutes
 
-### Option B: Self-Hosted (Requires Docker)
+### Steps
 
-If you have Docker Desktop or Docker Engine installed:
+```bash
+# 1. Clone the repo
+git clone https://github.com/sohansarkar07/orqesta.git
+cd orqesta
 
-```powershell
-# From Windows PowerShell in d:\orqesta:
-cd d:\orqesta
-docker compose up -d
+# 2. Start everything (Flagsmith + PostgreSQL + Orqesta)
+docker-compose up -d
+
+# 3. Wait 30 seconds for Flagsmith to initialize
+sleep 30
+
+# 4. Open Flagsmith UI
+open http://localhost:8000
 ```
 
-Wait 60 seconds, then open http://localhost:8000 in your browser.
+### First-Time Setup in Flagsmith UI:
+1. **Create admin account** at http://localhost:8000
+2. **Create an organisation** (e.g. "My Org")
+3. **Create a project** (e.g. "Demo App")
+4. **Create 2 environments**: `Staging` and `Production`
+5. **Add 2-3 feature flags** in each environment
+6. **Get API key**: Organisation Settings → API Keys → Copy token
 
-If you don't have Docker, see `SETUP_FLAGSMITH.md` for installation instructions.
+### Connect Orqesta to Flagsmith:
+1. **Open Orqesta**: http://localhost:3001
+2. **Go to Settings** (sidebar)
+3. **Paste your API key** (from step 6 above)
+4. **Set API URL**: `http://flagsmith:8000/api/v1` (already pre-configured in Docker)
+5. **Click Connect**
 
----
-
-## Step 2: Set Up Flagsmith (First-Time Setup)
-
-If using **Flagsmith Cloud**, you're logged in already after signup.
-
-If using **self-hosted** (http://localhost:8000):
-1. Open http://localhost:8000
-2. Create your admin account
-3. Create an organisation
-
----
-
-## Step 3: Create the Demo Project
-
-1. **Create a project** called **"orqesta Demo"**
-2. **Create two environments** in that project:
-   - `Staging`
-   - `Production`
+### Try It Out:
+- **Overview**: See your projects and environments
+- **Compare**: Select `Staging` → `Production` → see drift
+- **Sync**: Generate a sync plan → review → apply
+- **Forensics**: View audit log of all changes
+- **Policy**: Run governance checks
 
 ---
 
-## Step 4: Create Feature Flags with Intentional Drift
+## ⚡ Option 2: Local Development (npm)
 
-In the Flagsmith dashboard:
+Use cloud Flagsmith (or your own hosted instance).
 
-### Flag 1: `checkout_redesign` (enabled state drift)
+### Prerequisites
+- Node.js 18+
+- Flagsmith account (https://flagsmith.com)
 
-1. Create a new flag: **`checkout_redesign`** (Boolean, no value)
-2. In **Staging**: Enable it
-3. In **Production**: Leave it disabled
-4. **Make a few toggle changes in Staging** to generate audit log entries
+### Steps
 
-### Flag 2: `hero_text` (value drift)
+```bash
+# 1. Clone + install
+git clone https://github.com/sohansarkar07/orqesta.git
+cd orqesta
+npm install
 
-1. Create a new flag: **`hero_text`** (String)
-2. In **Staging**: Set value to `"Save 20% Today"`
-3. In **Production**: Set value to `"Free Shipping"`
+# 2. Start API server
+npm run server
+# Runs on http://localhost:3001
 
-### Flag 3: `dark_mode` (no drift — control)
-
-1. Create a new flag: **`dark_mode`** (Boolean)
-2. Leave it **disabled in both** Staging and Production
-
-### Optional: Flag 4: `ab_test_button` (multivariate drift)
-
-1. Create a multivariate flag: **`ab_test_button`**
-2. Add two variants: `variant_a`, `variant_b`
-3. In **Staging**: Set allocations to 50% / 50%
-4. In **Production**: Set allocations to 70% / 30%
-
----
-
-## Step 5: Get Your API Token
-
-1. Go to **Organisation Settings** → **API Keys**
-2. Copy your **Organisation API Token** (starts with `ser.` for cloud)
-3. Keep it safe — this is your Management API credential
-
----
-
-## Step 6: Configure orqesta
-
-Open PowerShell in `d:\orqesta`:
-
-```powershell
-cd d:\orqesta
-
-# Set your API token
-$env:FLAGSMITH_API_KEY = "your_token_here"
-
-# If using self-hosted:
-# $env:FLAGSMITH_API_URL = "http://localhost:8000/api/v1"
-
-# Verify connectivity
-node dist/cli/index.js doctor
+# 3. Start frontend (new terminal)
+cd web
+npm run dev
+# Runs on http://localhost:5173
 ```
 
-Expected output:
-```
-✓  API key configured
-   source: environment variable
+### Connect to Flagsmith:
+1. **Get API key** from https://app.flagsmith.com → Organisation Settings → API Keys
+2. **Open Orqesta**: http://localhost:5173/app/settings
+3. **Paste API key** + click Connect
 
-✓  API connectivity
-   Connected — 1 organisation(s) accessible
+---
 
-All checks passed. orqesta is ready to use.
+## ⚡ Option 3: CLI Only (No Web UI)
+
+Just use the CLI commands directly.
+
+```bash
+# Install
+npm install
+
+# Configure
+export FLAGSMITH_API_KEY=ser.xxxxxxxxxxxxxxxx
+export FLAGSMITH_API_URL=https://api.flagsmith.com/api/v1
+
+# Run commands
+npm run cli -- compare Staging Production
+npm run cli -- sync Staging Production --dry-run
+npm run cli -- inspect my_feature --with-changes
+npm run cli -- lint Production --policy ./examples/policy.yml
 ```
 
 ---
 
-## Step 7: Run the Full Demo Workflow
+## 🎯 What to Try (Demo Script)
 
-### 7.1 Discover Environments
-
-```powershell
-node dist/cli/index.js environments
+### 1. **Compare Environments**
+```bash
+# Web UI: Compare → Select project + Staging → Production
+# CLI: npm run cli -- compare Staging Production
 ```
+See drift in:
+- Enabled states
+- Remote config values
+- Multivariate allocations
+- Missing flags
 
-You should see your "orqesta Demo" project with Staging and Production listed.
-
-### 7.2 Detect Drift
-
-```powershell
-node dist/cli/index.js compare Staging Production
+### 2. **Sync Environments**
+```bash
+# Web UI: Sync → Generate Plan → Review → Apply (or Dry-run)
+# CLI: npm run cli -- sync Staging Production --dry-run
 ```
+Features:
+- Interactive approval (select which operations to apply)
+- Dry-run mode (preview without changes)
+- Stale-plan protection (detects concurrent changes)
 
-Expected output:
+### 3. **Audit Log (Forensics)**
+```bash
+# Web UI: Forensics → Select project + environment
+# CLI: npm run cli -- inspect my_feature --with-changes
 ```
-Drift: Staging → Production
+Shows:
+- Who changed what
+- When
+- Before/after values for each field
 
-  Enabled state differences
-    → checkout_redesign  enabled → disabled
-
-  Value differences
-    → hero_text
-        source: "Save 20% Today"
-        target: "Free Shipping"
-
-  3 differences — 1 enabled-state, 1 value
+### 4. **Policy Checks**
+```bash
+# Web UI: Policy → Run Policy Check
+# CLI: npm run cli -- lint Production --policy ./examples/policy.yml
 ```
-
-### 7.3 Inspect Audit Log
-
-```powershell
-node dist/cli/index.js inspect checkout_redesign
-```
-
-You'll see the toggle events you created in Step 4, with timestamps and actor info.
-
-### 7.4 Generate Sync Plan
-
-```powershell
-node dist/cli/index.js plan Staging Production
-```
-
-orqesta builds a typed, checksummed plan showing exactly what will change.
-
-### 7.5 Preview (Dry-Run)
-
-```powershell
-node dist/cli/index.js apply --dry-run
-```
-
-Shows what _would_ happen, **without touching Production**.
-
-### 7.6 Apply to Production (Interactive Approval)
-
-```powershell
-node dist/cli/index.js apply
-```
-
-orqesta shows the plan again, then asks:
-```
-? Apply these changes to the target environment? (y/N)
-```
-
-Type `y` and press Enter. It applies the changes and runs automatic verification.
-
-### 7.7 Verify Result
-
-```powershell
-node dist/cli/index.js verify Staging Production
-```
-
-Should now report:
-```
-✓ Verification passed — Staging and Production are in sync
-```
-
-### 7.8 Generate Markdown Report
-
-```powershell
-node dist/cli/index.js report Staging Production --output demo-report.md
-```
-
-Open `demo-report.md` to see the full drift and sync report.
+Built-in rules:
+- Naming conventions (snake_case)
+- Required descriptions
+- No archived flags enabled
+- Multivariate allocation validation
+- Cross-environment parity checks
 
 ---
 
-## Step 8: Check the Result in Flagsmith
+## 📊 Expected Output
 
-Go back to the Flagsmith dashboard → Production environment.
-
-- `checkout_redesign` should now be **enabled** (synced from Staging)
-- `hero_text` should now be `"Save 20% Today"` (synced from Staging)
-- Audit log should show the changes made by orqesta
-
----
-
-## Step 9: Record Demo Video
-
-Use screen recording software (OBS, Windows Game Bar, Loom) to record your terminal and browser:
-
-1. Show the Flagsmith dashboard with the drift (Staging vs Production)
-2. Run `orqesta compare Staging Production` — drift shown
-3. Run `orqesta plan Staging Production` — plan generated
-4. Run `orqesta apply` — approval gate → apply
-5. Show the Flagsmith dashboard with Production now matching Staging
-6. Run `orqesta verify Staging Production` — verification passed
-
-Keep it under 3 minutes. Focus on the problem → solution → result story.
-
----
-
-## Troubleshooting
-
-### "No Flagsmith API key configured"
-
-Set the environment variable:
-```powershell
-$env:FLAGSMITH_API_KEY = "your_token"
+### After `docker-compose up`:
+```
+✓ PostgreSQL started on :5432
+✓ Flagsmith started on :8000
+✓ Orqesta started on :3001
 ```
 
-### "Authentication failed"
-
-Your token might be incorrect. Re-copy it from Organisation Settings → API Keys.
-
-### "Environment not found"
-
-Check the name matches exactly (case-insensitive but check for typos). Run:
-```powershell
-node dist/cli/index.js environments
+### After connecting in UI:
 ```
-to see all available environments.
-
-### "No drift detected"
-
-Your flags are already in sync. Intentionally change a flag in Staging to create drift.
-
-### Docker Compose fails
-
-Ensure Docker Desktop is running. Check:
-```powershell
-docker ps
+✓ Connected to Flagsmith
+  Org: My Org
+  Projects: 1
+  Environments: 2
 ```
 
-If containers aren't listed, restart:
-```powershell
-docker compose down
-docker compose up -d
+### After running Compare:
+```
+Environment Comparison
+Staging → Production
+
+4 DIFFERENCES
+├─ 1 Enabled state
+├─ 2 Value changes
+└─ 1 Missing in target
 ```
 
 ---
 
-## What's Next?
+## 🐛 Troubleshooting
 
-- Push orqesta to a **public GitHub repository**
-- Write a 2-minute description of the problem and solution
-- Upload your demo video to YouTube or Loom
-- Submit to **Toggle Wars — Track 03: Build on Open Source Flagsmith**
-- Share the repo link, video link, and brief description
+### "Cannot connect to Flagsmith"
+- **Docker**: Wait 60s for Flagsmith to fully start: `docker-compose logs flagsmith`
+- **Cloud**: Check API key is valid and has Organisation scope
 
-**Good luck!** 🚀
+### "Port 3001 already in use"
+```bash
+# Kill existing process
+lsof -ti:3001 | xargs kill -9
+
+# Or change port
+PORT=4001 npm run server
+```
+
+### "No projects found"
+- Create a project + environment in Flagsmith UI first
+- Make sure API key has correct scope (Organisation-level)
+
+---
+
+## 📚 Next Steps
+
+- **Full docs**: [README.md](./README.md)
+- **API docs**: http://localhost:3001/api/health
+- **Example policy**: [examples/policy.yml](./examples/policy.yml)
+- **Tests**: `npm test` (95 tests)
+
+---
+
+## 🎥 Video Demo
+
+[TODO: Add Loom/YouTube link for hackathon submission]
+
+---
+
+**Built for Toggle Wars Hackathon — Track 03: Build on Open Source Flagsmith**

@@ -2,13 +2,29 @@
 
 **Flagsmith configuration safety, environment drift detection, change forensics and policy enforcement.**
 
-Orqesta is an open-source CLI tool that extends the [Flagsmith](https://flagsmith.com) developer workflow. It answers three questions teams face when managing feature flags across multiple environments:
+Orqesta is an open-source CLI + Web UI that extends the [Flagsmith](https://flagsmith.com) developer workflow. It answers three questions teams face when managing feature flags across multiple environments:
 
 - **What is different between my environments?** Compare any two environments and get a readable, categorised diff.
 - **What changed, who changed it, and what did it look like before?** Inspect structured audit history with before/after field values.
 - **Does our configuration meet our standards?** Run policy checks against an environment and catch violations in CI before they reach production.
 
 Built for [Toggle Wars Hackathon — Track 03: Build on Open Source Flagsmith](https://www.wemakedevs.org/hackathons/flagsmith).
+
+---
+
+## 🚀 Quick Start (5 Minutes)
+
+```bash
+# Start self-hosted Flagsmith + Orqesta with Docker
+git clone https://github.com/sohansarkar07/orqesta.git
+cd orqesta
+docker-compose up -d
+
+# Open Flagsmith UI: http://localhost:8000 (create account + API key)
+# Open Orqesta UI: http://localhost:3001 (paste API key in Settings)
+```
+
+**→ [Full Quick Start Guide](./QUICKSTART.md)**
 
 ---
 

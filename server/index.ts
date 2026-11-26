@@ -13,6 +13,8 @@
 
 import express from 'express';
 import cors from 'cors';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import { settingsRouter } from './routes/settings.js';
 import { environmentsRouter } from './routes/environments.js';
 import { compareRouter } from './routes/compare.js';
@@ -21,8 +23,12 @@ import { forensicsRouter } from './routes/forensics.js';
 import { policyRouter } from './routes/policy.js';
 import { handleError } from './middleware/errors.js';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = parseInt(process.env.PORT ?? '3001', 10);
+const NODE_ENV = process.env.NODE_ENV ?? 'development';
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 
@@ -52,11 +58,22 @@ app.use('/api/sync',        syncRouter);
 app.use('/api/forensics',   forensicsRouter);
 app.use('/api/policy',      policyRouter);
 
-// ─── 404 ──────────────────────────────────────────────────────────────────────
+// ─── Static Files (Production) ────────────────────────────────────────────────
 
-app.use((_req, res) => {
-  res.status(404).json({ error: 'Route not found', code: 'NOT_FOUND' });
-});
+if (NODE_ENV === 'production') {
+  const webDistPath = path.join(__dirname, '../../web/dist');
+  app.use(express.static(webDistPath));
+
+  // Catch-all: serve React SPA for any non-API route
+  app.get('*', (_req, res) => {
+    res.sendFile(path.join(webDistPath, 'index.html'));
+  });
+} else {
+  // Development: return 404 for non-API routes (frontend is on :5173)
+  app.use((_req, res) => {
+    res.status(404).json({ error: 'Route not found', code: 'NOT_FOUND' });
+  });
+}
 
 // ─── Error handler ────────────────────────────────────────────────────────────
 

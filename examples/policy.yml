@@ -1,0 +1,59 @@
+# Orqesta Policy File — Example Configuration
+# Place this in your repo root as .orqesta-policy.yml
+
+version: 1
+
+policies:
+  # ─── Naming Convention ────────────────────────────────────────────────────────
+  - id: naming-convention
+    description: Flag names must be snake_case (lowercase with underscores)
+    severity: warning
+    rule: naming_convention
+    pattern: "^[a-z][a-z0-9_]*$"
+
+  # ─── Required Descriptions ────────────────────────────────────────────────────
+  - id: production-descriptions
+    description: Production flags must have descriptions for team clarity
+    severity: error
+    rule: require_description
+    environments:
+      - Production
+
+  - id: staging-descriptions
+    description: Staging flags should have descriptions
+    severity: warning
+    rule: require_description
+    environments:
+      - Staging
+
+  # ─── No Archived Flags Enabled ────────────────────────────────────────────────
+  - id: no-archived-enabled
+    description: Archived flags must not be enabled (clean up old flags)
+    severity: error
+    rule: no_archived_flags_enabled
+
+  # ─── Multivariate Allocation ──────────────────────────────────────────────────
+  - id: valid-multivariate
+    description: Multivariate allocations must sum to 100%
+    severity: error
+    rule: validate_multivariate_allocations
+
+  # ─── Cross-Environment Parity ─────────────────────────────────────────────────
+  - id: staging-prod-parity
+    description: Staging and Production must have the same set of flags
+    severity: warning
+    rule: cross_environment_parity
+    environments:
+      - Staging
+      - Production
+
+# ─── Usage ────────────────────────────────────────────────────────────────────
+# CLI:
+#   orqesta lint Production --policy ./examples/policy.yml
+#
+# Web UI:
+#   Policy page → check "Use custom policy" → paste this YAML
+#
+# CI/CD:
+#   npm run cli -- lint Production --policy ./.orqesta-policy.yml
+#   # Exits with code 1 if any errors found (fails the build)
