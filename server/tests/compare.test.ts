@@ -118,7 +118,7 @@ describe('POST /api/compare', () => {
           multivariate_feature_state_values: [],
         },
       ]),
-    }));
+    } as any));
 
     creds.setCredentials('ser.testkey', 'https://api.flagsmith.com/api/v1');
     const res = await request(app).post('/api/compare').send({

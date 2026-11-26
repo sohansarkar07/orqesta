@@ -131,7 +131,7 @@ describe('POST /api/sync/apply', () => {
         }]);
       }),
       updateFeatureState: vi.fn().mockResolvedValue({ id: 201, enabled: true }),
-    }));
+    } as any));
 
     creds.setCredentials('ser.testkey', 'https://api.flagsmith.com/api/v1');
     const planRes = await request(app).post('/api/sync/plan').send({
