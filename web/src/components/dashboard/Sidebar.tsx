@@ -19,22 +19,6 @@ export function Sidebar() {
       flexDirection: 'column',
       paddingTop: '24px',
     }}>
-      {/* Demo banner */}
-      <div style={{
-        margin: '0 16px 20px',
-        padding: '8px 12px',
-        background: 'var(--sage-pale)',
-        border: '1px solid #C2D9BC',
-        borderRadius: 'var(--radius-sm)',
-      }}>
-        <p style={{ fontSize: '11px', color: 'var(--olive)', fontWeight: 500, letterSpacing: '0.03em' }}>
-          DEMO MODE
-        </p>
-        <p style={{ fontSize: '11px', color: 'var(--ink-500)', marginTop: '2px', lineHeight: 1.4 }}>
-          Showing sample data
-        </p>
-      </div>
-
       <nav style={{ padding: '0 8px', flexGrow: 1 }}>
         {NAV_ITEMS.map(({ to, label, icon }) => (
           <NavLink
@@ -62,20 +46,7 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Bottom env selector */}
-      <div style={{
-        margin: '16px',
-        padding: '12px',
-        background: 'var(--ivory)',
-        border: 'var(--border)',
-        borderRadius: 'var(--radius-md)',
-      }}>
-        <p style={{ fontSize: '10px', fontWeight: 500, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--ink-300)', marginBottom: '6px' }}>
-          Project
-        </p>
-        <div style={{ fontSize: '13px', color: 'var(--ink-700)', fontWeight: 500 }}>FlagGuard Demo</div>
-        <div style={{ fontSize: '11px', color: 'var(--ink-300)', marginTop: '2px' }}>Flagsmith Cloud</div>
-      </div>
+
     </aside>
   );
 }

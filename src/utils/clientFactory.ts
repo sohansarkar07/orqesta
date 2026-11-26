@@ -1,6 +1,6 @@
 /**
  * Creates a FlagsmithClient from the current configuration.
- * Errors clearly when API key is not configured.
+ * Errors clearly when credentials are not configured.
  */
 
 import { FlagsmithClient } from '../flagsmith/client.js';
@@ -8,22 +8,38 @@ import { ConfigManager } from '../config/index.js';
 import { printError } from './output.js';
 
 export function createClient(): FlagsmithClient {
-  const apiKey = ConfigManager.getApiKey();
+  const apiToken = ConfigManager.getApiToken();
   const apiUrl = ConfigManager.getApiUrl();
+  const environmentKey = ConfigManager.getEnvironmentKey();
+  const flagsApiUrl = ConfigManager.getFlagsApiUrl();
 
-  if (!apiKey) {
+  if (!apiToken && !environmentKey) {
     printError(
-      'No Flagsmith API key configured.\n' +
-        '  Set it with: orqesta config set-key <YOUR_API_KEY>\n' +
-        '  Or export:   FLAGSMITH_API_KEY=<YOUR_API_KEY>',
+      'No Flagsmith credentials configured.\n' +
+        '  Management API token: set ORQUESTA_API_TOKEN (required for most commands)\n' +
+        '  Flags API key (optional): set ORQUESTA_ENVIRONMENT_KEY\n' +
+        '  Or use: orqesta config set-key <YOUR_API_TOKEN>',
     );
     process.exit(1);
   }
 
-  return new FlagsmithClient(apiKey, apiUrl);
+  return new FlagsmithClient({ apiToken, apiUrl, environmentKey, flagsApiUrl });
 }
 
-/** Resolve an environment reference (name or API key) to its API key */
+/** Create a client and assert it has Management API access, failing clearly if not. */
+export function createManagementClient(): FlagsmithClient {
+  const apiToken = ConfigManager.getApiToken();
+  if (!apiToken) {
+    printError(
+      'This command requires a Management API token.\n' +
+        '  Set ORQUESTA_API_TOKEN or FLAGSMITH_API_KEY and retry.',
+    );
+    process.exit(1);
+  }
+  return createClient();
+}
+
+/** Resolve an environment reference (name or API key) to its API key. */
 export async function resolveEnvironment(
   client: FlagsmithClient,
   nameOrKey: string,
@@ -31,7 +47,6 @@ export async function resolveEnvironment(
 ): Promise<{ apiKey: string; name: string; id: number }> {
   const environments = await client.getEnvironments(projectId);
 
-  // Try matching by name (case-insensitive) or by API key
   const match = environments.find(
     (e) =>
       e.name.toLowerCase() === nameOrKey.toLowerCase() ||
@@ -50,25 +65,22 @@ export async function resolveEnvironment(
   return { apiKey: match.api_key, name: match.name, id: match.id };
 }
 
-/** Resolve project — from flag, config, or interactive if ambiguous */
+/** Resolve project — from flag, config, or auto-detect from org. */
 export async function resolveProject(
   client: FlagsmithClient,
   projectNameOrId?: string,
 ): Promise<number> {
-  // If explicitly provided, use it
   if (projectNameOrId) {
     const id = parseInt(projectNameOrId, 10);
     if (!isNaN(id)) return id;
   }
 
-  // Fall back to configured project
   const configured = ConfigManager.getProjectId();
   if (configured) return configured;
 
-  // Try the user's organisations and pick the first project
   const orgs = await client.getOrganisations();
   if (orgs.length === 0) {
-    throw new Error('No organisations found for this API key.');
+    throw new Error('No organisations found for this API token.');
   }
 
   const firstOrg = orgs[0]!;
@@ -83,7 +95,7 @@ export async function resolveProject(
   }
 
   throw new Error(
-    `Multiple projects found. Specify one with --project <name-or-id> or run orqesta environments to see all.\n` +
+    'Multiple projects found. Specify one with --project <name-or-id> or set a default with orqesta config set-project <id>.\n' +
       `  Projects: ${projects.map((p) => `"${p.name}" (${p.id})`).join(', ')}`,
   );
 }

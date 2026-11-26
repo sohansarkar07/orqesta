@@ -64,16 +64,25 @@ export interface FlagsmithFeatureState {
 /** Returned by GET /environment-document/ using the server-side SDK key */
 export interface FlagsmithEnvironmentDocument {
   id: number;
+  name?: string;
   api_key: string;
   project: {
     id: number;
     name: string;
-    organisation: number;
+    organisation: number | { id: number; name: string; plan: string };
     hide_disabled_flags: boolean;
     segments: EnvironmentDocumentSegment[];
+    enable_realtime_updates?: boolean;
+    server_key_only_feature_ids?: number[];
   };
   feature_states: EnvironmentDocumentFeatureState[];
   identity_overrides?: unknown[];
+  allow_client_traits?: boolean;
+  updated_at?: string;
+  hide_sensitive_data?: boolean;
+  hide_disabled_flags?: boolean | null;
+  use_identity_composite_key_for_hashing?: boolean;
+  use_identity_overrides_in_local_eval?: boolean;
   amplitude_config?: unknown;
   mixpanel_config?: unknown;
 }

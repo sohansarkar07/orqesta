@@ -25,18 +25,18 @@ export function Nav() {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      background: 'rgba(255,255,255,0.85)',
-      backdropFilter: 'blur(12px)',
-      borderBottom: '1px solid rgba(26,25,22,0.08)',
+      background: 'rgba(255,255,255,0.92)',
+      backdropFilter: 'blur(16px)',
+      borderBottom: '1px solid rgba(26,25,22,0.06)',
     }}>
       <div style={{
-        maxWidth: '1400px',
+        maxWidth: '1280px',
         margin: '0 auto',
-        padding: '0 48px',
+        padding: '0 32px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: '72px',
+        height: '56px',
       }}>
         {/* Logo */}
         <Link 
@@ -44,7 +44,7 @@ export function Nav() {
           style={{ 
             display: 'flex', 
             alignItems: 'center', 
-            gap: '10px',
+            gap: '8px',
             textDecoration: 'none',
           }}
         >
@@ -52,7 +52,7 @@ export function Nav() {
             src="/orqesta-logo.jpg"
             alt="Orqesta"
             style={{
-              height: '36px',
+              height: '42px',
               width: 'auto',
               borderRadius: '6px',
               display: 'block',
@@ -62,7 +62,7 @@ export function Nav() {
 
         {/* Nav links */}
         {!isApp && (
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
             {[
               { label: 'How it works', sectionId: 'features' },
               { label: 'FAQ', sectionId: 'faq' },
@@ -71,18 +71,18 @@ export function Nav() {
                 key={item.label}
                 onClick={() => handleSectionLink(item.sectionId)}
                 style={{
-                  fontSize: '15px',
-                  color: 'var(--ink-600)',
+                  fontSize: '13px',
+                  color: 'rgba(26,25,22,0.65)',
                   fontWeight: 400,
                   background: 'none',
                   border: 'none',
                   cursor: 'pointer',
                   padding: 0,
                   fontFamily: 'inherit',
-                  transition: 'color 0.2s ease',
+                  transition: 'color 0.15s ease',
                 }}
                 onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink-900)'; }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-600)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(26,25,22,0.65)'; }}
               >
                 {item.label}
               </button>
@@ -90,14 +90,14 @@ export function Nav() {
             <Link
               to="/docs"
               style={{
-                fontSize: '15px',
-                color: 'var(--ink-600)',
+                fontSize: '13px',
+                color: 'rgba(26,25,22,0.65)',
                 fontWeight: 400,
                 textDecoration: 'none',
-                transition: 'color 0.2s ease',
+                transition: 'color 0.15s ease',
               }}
               onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink-900)'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-600)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'rgba(26,25,22,0.65)'; }}
             >
               Docs
             </Link>
@@ -105,10 +105,10 @@ export function Nav() {
         )}
 
         {/* CTA */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           {isApp ? (
             <Link to="/">
-              <Button variant="ghost" size="sm" style={{ fontSize: '14px' }}>
+              <Button variant="ghost" size="sm" style={{ fontSize: '13px' }}>
                 ← Back
               </Button>
             </Link>
@@ -116,24 +116,24 @@ export function Nav() {
             <>
               <Link to="/cli">
                 <button style={{
-                  padding: '9px 18px',
-                  fontSize: '14px',
+                  padding: '6px 12px',
+                  fontSize: '12px',
                   fontWeight: 500,
-                  color: 'var(--ink-700)',
-                  background: 'white',
-                  border: '1px solid rgba(26,25,22,0.12)',
-                  borderRadius: '8px',
+                  color: 'rgba(26,25,22,0.75)',
+                  background: 'transparent',
+                  border: '1px solid rgba(26,25,22,0.1)',
+                  borderRadius: '6px',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.15s ease',
                   fontFamily: 'inherit',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(26,25,22,0.24)';
-                  e.currentTarget.style.background = 'var(--ivory)';
+                  e.currentTarget.style.borderColor = 'rgba(26,25,22,0.2)';
+                  e.currentTarget.style.background = 'rgba(26,25,22,0.03)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(26,25,22,0.12)';
-                  e.currentTarget.style.background = 'white';
+                  e.currentTarget.style.borderColor = 'rgba(26,25,22,0.1)';
+                  e.currentTarget.style.background = 'transparent';
                 }}
                 >
                   Try CLI
@@ -141,24 +141,24 @@ export function Nav() {
               </Link>
               <Link to="/mcp">
                 <button style={{
-                  padding: '9px 18px',
-                  fontSize: '14px',
+                  padding: '6px 12px',
+                  fontSize: '12px',
                   fontWeight: 500,
-                  color: 'var(--olive)',
-                  background: 'var(--sage-pale)',
-                  border: '1px solid #C2D9BC',
-                  borderRadius: '8px',
+                  color: '#4A7C59',
+                  background: 'rgba(76,175,80,0.08)',
+                  border: '1px solid rgba(76,175,80,0.15)',
+                  borderRadius: '6px',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.15s ease',
                   fontFamily: 'inherit',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.background = '#C2D9BC';
-                  e.currentTarget.style.borderColor = '#A8C49A';
+                  e.currentTarget.style.background = 'rgba(76,175,80,0.14)';
+                  e.currentTarget.style.borderColor = 'rgba(76,175,80,0.25)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'var(--sage-pale)';
-                  e.currentTarget.style.borderColor = '#C2D9BC';
+                  e.currentTarget.style.background = 'rgba(76,175,80,0.08)';
+                  e.currentTarget.style.borderColor = 'rgba(76,175,80,0.15)';
                 }}
                 >
                   Get MCP Bundle
@@ -166,20 +166,20 @@ export function Nav() {
               </Link>
               <Link to="/app">
                 <button style={{
-                  padding: '9px 22px',
-                  fontSize: '14px',
+                  padding: '6px 14px',
+                  fontSize: '12px',
                   fontWeight: 500,
                   color: 'white',
                   background: 'var(--ink-900)',
                   border: 'none',
-                  borderRadius: '8px',
+                  borderRadius: '6px',
                   cursor: 'pointer',
-                  transition: 'all 0.2s ease',
+                  transition: 'all 0.15s ease',
                   fontFamily: 'inherit',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(26,25,22,0.15)';
+                  e.currentTarget.style.transform = 'translateY(-0.5px)';
+                  e.currentTarget.style.boxShadow = '0 2px 8px rgba(26,25,22,0.12)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';

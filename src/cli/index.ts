@@ -25,7 +25,7 @@ import {
 
 // Read version from package.json
 const require = createRequire(import.meta.url);
-const pkg = require('../../package.json') as { version: string };
+const pkg = require('../../../package.json') as { version: string };
 
 const program = new Command();
 

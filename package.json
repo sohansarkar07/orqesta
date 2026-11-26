@@ -4,7 +4,7 @@
   "description": "Flagsmith configuration safety, environment drift detection and change forensics CLI",
   "type": "module",
   "bin": {
-    "orqesta": "./dist/cli/index.js"
+    "orqesta": "./dist/src/cli/index.js"
   },
   "scripts": {
     "build": "tsc",

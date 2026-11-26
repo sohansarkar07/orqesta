@@ -1,7 +1,6 @@
 /**
  * Tests for /api/settings routes.
  * Uses mocked FlagsmithClient to avoid real network calls.
- * Clearly labelled as unit tests — not live integration tests.
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -9,12 +8,15 @@ import request from 'supertest';
 import { app } from '../index.js';
 import * as creds from '../credentials.js';
 
-// Mock FlagsmithClient.ping so tests never hit the real API
+const DEFAULT_URL = 'https://api.flagsmith.com/api/v1';
+const FLAGS_URL   = 'https://edge.api.flagsmith.com/api/v1';
+
+// ping() now returns { management, flags } — not { ok, organisations }
 vi.mock('../../src/flagsmith/client.js', () => ({
   FlagsmithClient: vi.fn().mockImplementation(() => ({
     ping: vi.fn().mockResolvedValue({
-      ok: true,
-      organisations: [{ id: 1, name: 'Test Org', plan: 'free' }],
+      management: { ok: true, organisations: [{ id: 1, name: 'Test Org', plan: 'free' }] },
+      flags:      { ok: false },
     }),
   })),
   FlagsmithApiError: class FlagsmithApiError extends Error {
@@ -27,9 +29,7 @@ vi.mock('../../src/flagsmith/client.js', () => ({
 }));
 
 describe('POST /api/settings/connect', () => {
-  beforeEach(() => {
-    creds.clearCredentials();
-  });
+  beforeEach(() => { creds.clearCredentials(); });
 
   it('returns 400 when apiKey is missing', async () => {
     const res = await request(app).post('/api/settings/connect').send({});
@@ -40,7 +40,7 @@ describe('POST /api/settings/connect', () => {
   it('returns 400 when apiUrl is invalid', async () => {
     const res = await request(app)
       .post('/api/settings/connect')
-      .send({ apiKey: 'ser.testkey', apiUrl: 'not-a-url' });
+      .send({ apiKey: 'tok.testkey', apiUrl: 'not-a-url' });
     expect(res.status).toBe(400);
     expect(res.body.code).toBe('VALIDATION_ERROR');
   });
@@ -48,29 +48,24 @@ describe('POST /api/settings/connect', () => {
   it('stores credentials and returns connected when ping succeeds', async () => {
     const res = await request(app)
       .post('/api/settings/connect')
-      .send({ apiKey: 'ser.testkey1234', apiUrl: 'https://api.flagsmith.com/api/v1' });
+      .send({ apiKey: 'tok.testkey1234', apiUrl: DEFAULT_URL });
     expect(res.status).toBe(200);
     expect(res.body.connected).toBe(true);
-    expect(res.body.maskedKey).toBe('ser.…1234');
+    expect(res.body.maskedKey).toBe('tok.…1234');
     expect(res.body.organisations).toHaveLength(1);
-    // API key must NOT be in the response
-    expect(JSON.stringify(res.body)).not.toContain('ser.testkey1234');
+    // Secret must NOT appear in response
+    expect(JSON.stringify(res.body)).not.toContain('tok.testkey1234');
   });
 
   it('never exposes the full API key in the response', async () => {
-    const secretKey = 'ser.supersecrettoken9999';
-    const res = await request(app)
-      .post('/api/settings/connect')
-      .send({ apiKey: secretKey });
-    const body = JSON.stringify(res.body);
-    expect(body).not.toContain(secretKey);
+    const secret = 'tok.supersecrettoken9999';
+    const res = await request(app).post('/api/settings/connect').send({ apiKey: secret });
+    expect(JSON.stringify(res.body)).not.toContain(secret);
   });
 });
 
 describe('GET /api/settings/status', () => {
-  beforeEach(() => {
-    creds.clearCredentials();
-  });
+  beforeEach(() => { creds.clearCredentials(); });
 
   it('returns connected: false when no credentials set', async () => {
     const res = await request(app).get('/api/settings/status');
@@ -79,18 +74,19 @@ describe('GET /api/settings/status', () => {
   });
 
   it('returns connected: true with masked key when credentials are set', async () => {
-    creds.setCredentials('ser.validkey5678', 'https://api.flagsmith.com/api/v1');
+    creds.setCredentials('tok.validkey5678', DEFAULT_URL);
     const res = await request(app).get('/api/settings/status');
     expect(res.status).toBe(200);
     expect(res.body.connected).toBe(true);
-    expect(res.body.maskedKey).toBe('ser.…5678');
-    expect(JSON.stringify(res.body)).not.toContain('ser.validkey5678');
+    expect(res.body.maskedKey).toBe('tok.…5678');
+    expect(JSON.stringify(res.body)).not.toContain('tok.validkey5678');
   });
 });
 
 describe('POST /api/settings/disconnect', () => {
   it('clears credentials', async () => {
-    creds.setCredentials('ser.key', 'https://api.flagsmith.com/api/v1');
+    creds.setCredentials('tok.somekey1234', DEFAULT_URL);
+    expect(creds.getCredentials()).not.toBeNull();
     const res = await request(app).post('/api/settings/disconnect').send({});
     expect(res.status).toBe(200);
     expect(res.body.disconnected).toBe(true);

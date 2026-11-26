@@ -8,12 +8,14 @@ import request from 'supertest';
 import { app } from '../index.js';
 import * as creds from '../credentials.js';
 
+const DEFAULT_URL = 'https://api.flagsmith.com/api/v1';
+
 const mockFeatureStates = (envId: number) => [
   {
     id: envId * 100 + 1,
     feature: { id: 1, name: 'checkout_redesign', type: 'STANDARD' as const },
     environment: envId,
-    enabled: envId === 1, // enabled in env 1 (staging), disabled in env 2 (prod)
+    enabled: envId === 1, // enabled in staging, disabled in production
     feature_state_value: null,
     multivariate_feature_state_values: [],
   },
@@ -45,7 +47,7 @@ vi.mock('../../src/flagsmith/client.js', () => ({
 
 describe('POST /api/compare', () => {
   beforeEach(() => {
-    creds.setCredentials('ser.testkey', 'https://api.flagsmith.com/api/v1');
+    creds.setCredentials('tok.testkey1234', DEFAULT_URL);
   });
 
   it('returns 401 when not configured', async () => {
@@ -78,21 +80,19 @@ describe('POST /api/compare', () => {
     expect(res.status).toBe(200);
     expect(res.body.drifts).toBeDefined();
     expect(res.body.summary.total).toBeGreaterThan(0);
-    // Should detect enabled_state drift on checkout_redesign
     const enabledDrift = res.body.drifts.find(
       (d: { category: string; feature: string }) =>
-        d.category === 'enabled_state' && d.feature === 'checkout_redesign'
+        d.category === 'enabled_state' && d.feature === 'checkout_redesign',
     );
     expect(enabledDrift).toBeDefined();
-    // Should detect value drift on hero_text
     const valueDrift = res.body.drifts.find(
       (d: { category: string; feature: string }) =>
-        d.category === 'value_change' && d.feature === 'hero_text'
+        d.category === 'value_change' && d.feature === 'hero_text',
     );
     expect(valueDrift).toBeDefined();
   });
 
-  it('never exposes api_key in the response', async () => {
+  it('never exposes environment api_key in the response', async () => {
     const res = await request(app).post('/api/compare').send({
       projectId: 10, sourceEnvName: 'Staging', targetEnvName: 'Production',
     });
@@ -120,7 +120,7 @@ describe('POST /api/compare', () => {
       ]),
     } as any));
 
-    creds.setCredentials('ser.testkey', 'https://api.flagsmith.com/api/v1');
+    creds.setCredentials('tok.testkey1234', DEFAULT_URL);
     const res = await request(app).post('/api/compare').send({
       projectId: 10, sourceEnvName: 'Staging', targetEnvName: 'Production',
     });

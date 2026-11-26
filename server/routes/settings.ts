@@ -20,6 +20,8 @@ export const settingsRouter = Router();
 const ConnectBody = z.object({
   apiKey: z.string().min(1, 'API key is required'),
   apiUrl: z.string().url('Must be a valid URL').or(z.literal('')).optional(),
+  environmentKey: z.string().optional(),
+  flagsApiUrl: z.string().url('Must be a valid URL').or(z.literal('')).optional(),
 });
 
 settingsRouter.post(
@@ -35,15 +37,15 @@ settingsRouter.post(
       return;
     }
 
-    const { apiKey, apiUrl } = parsed.data;
-    setCredentials(apiKey, apiUrl ?? '');
+    const { apiKey, apiUrl, environmentKey, flagsApiUrl } = parsed.data;
+    setCredentials(apiKey, apiUrl ?? '', environmentKey, flagsApiUrl ?? '');
 
     // Validate by attempting a real ping
     const client = requireClient();
     const ping = await client.ping();
 
-    if (!ping.ok) {
-      clearCredentials(); // don't store bad credentials
+    if (!ping.management.ok) {
+      clearCredentials();
       res.status(401).json({
         error: 'Authentication failed. The API key was rejected by Flagsmith.',
         code: 'AUTH_FAILED',
@@ -51,7 +53,7 @@ settingsRouter.post(
       return;
     }
 
-    const orgs = ping.organisations ?? [];
+    const orgs = ping.management.organisations ?? [];
     res.json({
       connected: true,
       maskedKey: maskKey(apiKey),
@@ -64,7 +66,7 @@ settingsRouter.get(
   '/status',
   wrap(async (_req, res) => {
     const creds = getCredentials();
-    if (!creds) {
+    if (!creds || !creds.apiToken) {
       res.json({ connected: false });
       return;
     }
@@ -73,10 +75,10 @@ settingsRouter.get(
     const ping = await client.ping();
 
     res.json({
-      connected: ping.ok,
-      maskedKey: maskKey(creds.apiKey),
+      connected: ping.management.ok,
+      maskedKey: maskKey(creds.apiToken),
       apiUrl: creds.apiUrl,
-      organisations: ping.organisations?.map((o) => ({ id: o.id, name: o.name })) ?? [],
+      organisations: ping.management.organisations?.map((o) => ({ id: o.id, name: o.name })) ?? [],
     });
   }),
 );

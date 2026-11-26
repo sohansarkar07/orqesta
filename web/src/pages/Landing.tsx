@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import React from 'react';
 import { Button } from '../components/ui/Button';
 import { Panel } from '../components/ui/Panel';
 import { LandscapeIllustration } from '../components/landing/Illustration';
@@ -428,14 +429,57 @@ function SafetySection() {
 
 /* ─── Architecture section ────────────────────────────────────────────────── */
 function Architecture() {
-  const modules = [
-    { label: 'CLI', desc: '11 commands', color: 'var(--ink-900)' },
-    { label: 'Drift Engine', desc: 'comparator + normaliser', color: 'var(--sage)' },
-    { label: 'Sync Engine', desc: 'planner + executor', color: 'var(--olive)' },
-    { label: 'Forensics', desc: 'audit + change_details', color: 'var(--forest)' },
-    { label: 'Policy Engine', desc: '5 rules + loader', color: '#7A6B4A' },
-    { label: 'Flagsmith API', desc: 'Management API client', color: 'var(--ink-500)' },
-  ];
+  React.useEffect(() => {
+    // Dynamically load and initialize mermaid
+    const loadMermaid = async () => {
+      if (typeof window !== 'undefined') {
+        // Remove existing script if any
+        const existingScript = document.querySelector('script[src*="mermaid"]');
+        if (existingScript) {
+          existingScript.remove();
+        }
+
+        // Load mermaid
+        const script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js';
+        script.async = true;
+        script.onload = () => {
+          if ((window as any).mermaid) {
+            (window as any).mermaid.initialize({ 
+              startOnLoad: true,
+              theme: 'base',
+              themeVariables: {
+                primaryColor: '#E8F3E3',
+                primaryTextColor: '#1A1916',
+                primaryBorderColor: '#6B9E78',
+                lineColor: '#A8C49A',
+                secondaryColor: '#F7F5F2',
+                tertiaryColor: '#fff',
+                fontSize: '16px',
+                fontFamily: 'Inter, system-ui, sans-serif',
+              },
+              flowchart: {
+                htmlLabels: true,
+                curve: 'basis',
+                padding: 30,
+                nodeSpacing: 100,
+                rankSpacing: 120,
+              }
+            });
+            // Force render
+            setTimeout(() => {
+              (window as any).mermaid.run({
+                querySelector: '.mermaid',
+              });
+            }, 100);
+          }
+        };
+        document.head.appendChild(script);
+      }
+    };
+
+    loadMermaid();
+  }, []);
 
   return (
     <section id="architecture" style={{ padding: '100px 0', background: 'var(--ivory-mid)' }}>
@@ -452,16 +496,44 @@ function Architecture() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
-          {modules.map((m) => (
-            <Panel key={m.label} style={{ padding: '24px 28px', display: 'flex', alignItems: 'center', gap: '16px' }}>
-              <div style={{ width: '8px', height: '44px', borderRadius: '4px', background: m.color, flexShrink: 0 }} />
-              <div>
-                <div style={{ fontSize: '15px', fontWeight: 500, color: 'var(--ink-900)' }}>{m.label}</div>
-                <div style={{ fontSize: '12px', color: 'var(--ink-300)', marginTop: '2px' }}>{m.desc}</div>
-              </div>
-            </Panel>
-          ))}
+        <div style={{ 
+          background: 'white', 
+          borderRadius: 'var(--radius-lg)', 
+          border: 'var(--border)',
+          padding: '64px 48px',
+          display: 'flex',
+          justifyContent: 'center',
+          minHeight: '500px',
+          overflow: 'auto',
+        }}>
+          <div className="mermaid" style={{ width: '100%', maxWidth: '1100px' }}>
+{`graph LR
+    CLI["<b>CLI</b><br/><span style='font-size:13px;opacity:0.65'>11 commands</span>"]
+    
+    Drift["<b>Drift Engine</b><br/><span style='font-size:13px;opacity:0.65'>comparator + normaliser</span>"]
+    Sync["<b>Sync Engine</b><br/><span style='font-size:13px;opacity:0.65'>planner + executor</span>"]
+    Forensics["<b>Forensics</b><br/><span style='font-size:13px;opacity:0.65'>audit + change_details</span>"]
+    Policy["<b>Policy Engine</b><br/><span style='font-size:13px;opacity:0.65'>5 rules + loader</span>"]
+    
+    API["<b>Flagsmith API</b><br/><span style='font-size:13px;opacity:0.65'>Management API client</span>"]
+    
+    CLI --> Drift
+    CLI --> Sync
+    CLI --> Forensics
+    CLI --> Policy
+    
+    Drift --> API
+    Sync --> API
+    Forensics --> API
+    Policy --> API
+    
+    style CLI fill:#1A1916,stroke:#1A1916,color:#fff,stroke-width:2px,padding:20px
+    style Drift fill:#E8F3E3,stroke:#6B9E78,color:#1A1916,stroke-width:2px,padding:20px
+    style Sync fill:#E8F3E3,stroke:#6B9E78,color:#1A1916,stroke-width:2px,padding:20px
+    style Forensics fill:#E8F3E3,stroke:#6B9E78,color:#1A1916,stroke-width:2px,padding:20px
+    style Policy fill:#F5F0E6,stroke:#7A6B4A,color:#1A1916,stroke-width:2px,padding:20px
+    style API fill:#F7F5F2,stroke:#999,color:#1A1916,stroke-width:2px,padding:20px`}
+          </div>
         </div>
       </div>
     </section>
@@ -538,9 +610,9 @@ function FAQ() {
   ];
 
   return (
-    <section id="faq" style={{ padding: '100px 0', background: 'var(--ivory)' }}>
-      <div className="container" style={{ maxWidth: '760px' }}>
-        <div style={{ marginBottom: '56px' }}>
+    <section id="faq" style={{ padding: '100px 0', background: 'var(--white)' }}>
+      <div className="container" style={{ maxWidth: '920px' }}>
+        <div style={{ marginBottom: '48px' }}>
           <p style={{ fontSize: '12px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage)', marginBottom: '12px' }}>
             FAQ
           </p>
@@ -559,21 +631,66 @@ function FAQ() {
 }
 
 function FAQItem({ q, a }: { q: string; a: string }) {
+  const [open, setOpen] = React.useState(false);
+
   return (
     <div style={{
-      padding: '28px 0',
-      borderBottom: 'var(--border-light)',
-      display: 'grid',
-      gridTemplateColumns: '1fr 2fr',
-      gap: '48px',
-      alignItems: 'start',
+      borderBottom: '1px solid rgba(26,25,22,0.08)',
     }}>
-      <p style={{ fontSize: '16px', fontWeight: 500, color: 'var(--ink-900)', lineHeight: 1.4 }}>
-        {q}
-      </p>
-      <p style={{ fontSize: '15px', color: 'var(--ink-500)', lineHeight: 1.7 }}>
-        {a}
-      </p>
+      <button
+        onClick={() => setOpen(!open)}
+        style={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          padding: '28px 0',
+          background: 'none',
+          border: 'none',
+          cursor: 'pointer',
+          textAlign: 'left',
+          fontFamily: 'inherit',
+        }}
+      >
+        <span style={{ 
+          fontSize: '16px', 
+          fontWeight: 500, 
+          color: 'var(--ink-900)', 
+          lineHeight: 1.4,
+          paddingRight: '24px',
+        }}>
+          {q}
+        </span>
+        <span style={{
+          fontSize: '24px',
+          color: open ? 'var(--sage)' : '#6B9E78',
+          transition: 'all 0.2s ease',
+          transform: open ? 'rotate(45deg)' : 'rotate(0deg)',
+          flexShrink: 0,
+          width: '24px',
+          height: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+          +
+        </span>
+      </button>
+      <div style={{
+        maxHeight: open ? '400px' : '0',
+        opacity: open ? 1 : 0,
+        overflow: 'hidden',
+        transition: 'all 0.3s ease',
+      }}>
+        <p style={{ 
+          fontSize: '15px', 
+          color: 'var(--ink-500)', 
+          lineHeight: 1.7,
+          paddingBottom: '28px',
+        }}>
+          {a}
+        </p>
+      </div>
     </div>
   );
 }
@@ -606,9 +723,6 @@ function Footer() {
             </a>
           ))}
         </div>
-        <p style={{ fontSize: '12px', color: 'var(--ink-300)' }}>
-          Built for Toggle Wars · Track 03
-        </p>
       </div>
     </footer>
   );
