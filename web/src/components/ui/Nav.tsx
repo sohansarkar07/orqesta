@@ -59,28 +59,51 @@ export function Nav() {
             {[
               { label: 'How it works', href: '#features' },
               { label: 'FAQ', href: '#architecture' },
-              { label: 'Docs', href: '#docs' },
+              { label: 'Docs', href: '/docs', isRoute: true },
             ].map((item) => (
-              <a 
-                key={item.label} 
-                href={item.href} 
-                style={{
-                  fontSize: '15px',
-                  color: 'var(--ink-600)',
-                  fontWeight: 400,
-                  textDecoration: 'none',
-                  transition: 'color 0.2s ease',
-                  position: 'relative',
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.color = 'var(--ink-900)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.color = 'var(--ink-600)';
-                }}
-              >
-                {item.label}
-              </a>
+              item.isRoute ? (
+                <Link
+                  key={item.label}
+                  to={item.href}
+                  style={{
+                    fontSize: '15px',
+                    color: 'var(--ink-600)',
+                    fontWeight: 400,
+                    textDecoration: 'none',
+                    transition: 'color 0.2s ease',
+                    position: 'relative',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'var(--ink-900)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'var(--ink-600)';
+                  }}
+                >
+                  {item.label}
+                </Link>
+              ) : (
+                <a 
+                  key={item.label} 
+                  href={item.href} 
+                  style={{
+                    fontSize: '15px',
+                    color: 'var(--ink-600)',
+                    fontWeight: 400,
+                    textDecoration: 'none',
+                    transition: 'color 0.2s ease',
+                    position: 'relative',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = 'var(--ink-900)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = 'var(--ink-600)';
+                  }}
+                >
+                  {item.label}
+                </a>
+              )
             ))}
           </nav>
         )}

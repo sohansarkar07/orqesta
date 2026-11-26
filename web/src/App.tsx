@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Nav } from './components/ui/Nav';
 import Landing from './pages/Landing';
+import Docs from './pages/Docs';
 import AppLayout from './pages/app/AppLayout';
 import Overview from './pages/app/Overview';
 import Compare from './pages/app/Compare';
@@ -15,6 +16,7 @@ export default function App() {
       <Nav />
       <Routes>
         <Route path="/" element={<Landing />} />
+        <Route path="/docs" element={<Docs />} />
         <Route path="/app" element={<AppLayout />}>
           <Route index element={<Overview />} />
           <Route path="compare"   element={<Compare />} />
