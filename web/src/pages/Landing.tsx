@@ -508,6 +508,76 @@ function Install() {
   );
 }
 
+/* ─── FAQ ─────────────────────────────────────────────────────────────────── */
+function FAQ() {
+  const faqs = [
+    {
+      q: 'What is Orqesta?',
+      a: 'Orqesta is an open-source CLI and web dashboard that extends Flagsmith with drift detection, selective sync, audit forensics, and policy enforcement.',
+    },
+    {
+      q: 'Does it work with self-hosted Flagsmith?',
+      a: 'Yes. Set FLAGSMITH_API_URL to your self-hosted instance URL. The included docker-compose.yml also spins up a full self-hosted Flagsmith stack alongside Orqesta.',
+    },
+    {
+      q: 'What is stale-plan protection?',
+      a: 'When you generate a sync plan, Orqesta snapshots the target environment state. Before applying, it re-checks for concurrent changes. If another user modified the target in the meantime, those operations are skipped — no silent overwrites.',
+    },
+    {
+      q: 'Can I use Orqesta in CI/CD pipelines?',
+      a: 'Yes. The lint command exits with code 1 on policy errors, making it ideal as a CI gate. Use --yes to skip interactive prompts in automated pipelines.',
+    },
+    {
+      q: 'Is my Flagsmith API token safe?',
+      a: 'Yes. API tokens are stored server-side only and never sent to the browser. All responses mask the token (e.g. ser.***abc123). The browser only ever sees the masked version.',
+    },
+    {
+      q: 'What is the MCP bundle?',
+      a: 'The MCP (Model Context Protocol) bundle lets you connect AI clients like Claude Desktop, Cursor, Kiro, or VS Code directly to Orqesta. Your AI agent can then compare environments, run policy checks, and inspect audit logs as part of a conversation.',
+    },
+  ];
+
+  return (
+    <section id="faq" style={{ padding: '100px 0', background: 'var(--ivory)' }}>
+      <div className="container" style={{ maxWidth: '760px' }}>
+        <div style={{ marginBottom: '56px' }}>
+          <p style={{ fontSize: '12px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage)', marginBottom: '12px' }}>
+            FAQ
+          </p>
+          <h2 style={{ fontSize: 'clamp(28px, 4vw, 44px)', fontWeight: 500 }}>
+            Frequently asked questions
+          </h2>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+          {faqs.map((faq, i) => (
+            <FAQItem key={i} q={faq.q} a={faq.a} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function FAQItem({ q, a }: { q: string; a: string }) {
+  return (
+    <div style={{
+      padding: '28px 0',
+      borderBottom: 'var(--border-light)',
+      display: 'grid',
+      gridTemplateColumns: '1fr 2fr',
+      gap: '48px',
+      alignItems: 'start',
+    }}>
+      <p style={{ fontSize: '16px', fontWeight: 500, color: 'var(--ink-900)', lineHeight: 1.4 }}>
+        {q}
+      </p>
+      <p style={{ fontSize: '15px', color: 'var(--ink-500)', lineHeight: 1.7 }}>
+        {a}
+      </p>
+    </div>
+  );
+}
+
 /* ─── Footer ──────────────────────────────────────────────────────────────── */
 function Footer() {
   return (
@@ -562,6 +632,7 @@ export default function Landing() {
       <SafetySection />
       <Architecture />
       <Install />
+      <FAQ />
       <Footer />
     </>
   );

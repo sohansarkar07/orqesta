@@ -1,9 +1,24 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button } from './Button';
 
 export function Nav() {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const isApp = pathname.startsWith('/app');
+  const isLanding = pathname === '/';
+
+  function handleSectionLink(sectionId: string) {
+    if (isLanding) {
+      // already on landing — just scroll
+      document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // navigate to landing then scroll after render
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+      }, 100);
+    }
+  }
 
   return (
     <header style={{
@@ -57,54 +72,43 @@ export function Nav() {
         {!isApp && (
           <nav style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
             {[
-              { label: 'How it works', href: '#features' },
-              { label: 'FAQ', href: '#architecture' },
-              { label: 'Docs', href: '/docs', isRoute: true },
+              { label: 'How it works', sectionId: 'features' },
+              { label: 'FAQ', sectionId: 'faq' },
             ].map((item) => (
-              item.isRoute ? (
-                <Link
-                  key={item.label}
-                  to={item.href}
-                  style={{
-                    fontSize: '15px',
-                    color: 'var(--ink-600)',
-                    fontWeight: 400,
-                    textDecoration: 'none',
-                    transition: 'color 0.2s ease',
-                    position: 'relative',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = 'var(--ink-900)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = 'var(--ink-600)';
-                  }}
-                >
-                  {item.label}
-                </Link>
-              ) : (
-                <a 
-                  key={item.label} 
-                  href={item.href} 
-                  style={{
-                    fontSize: '15px',
-                    color: 'var(--ink-600)',
-                    fontWeight: 400,
-                    textDecoration: 'none',
-                    transition: 'color 0.2s ease',
-                    position: 'relative',
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = 'var(--ink-900)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = 'var(--ink-600)';
-                  }}
-                >
-                  {item.label}
-                </a>
-              )
+              <button
+                key={item.label}
+                onClick={() => handleSectionLink(item.sectionId)}
+                style={{
+                  fontSize: '15px',
+                  color: 'var(--ink-600)',
+                  fontWeight: 400,
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 0,
+                  fontFamily: 'inherit',
+                  transition: 'color 0.2s ease',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink-900)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-600)'; }}
+              >
+                {item.label}
+              </button>
             ))}
+            <Link
+              to="/docs"
+              style={{
+                fontSize: '15px',
+                color: 'var(--ink-600)',
+                fontWeight: 400,
+                textDecoration: 'none',
+                transition: 'color 0.2s ease',
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink-900)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-600)'; }}
+            >
+              Docs
+            </Link>
           </nav>
         )}
 
