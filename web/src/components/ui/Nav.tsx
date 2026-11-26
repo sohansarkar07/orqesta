@@ -47,25 +47,17 @@ export function Nav() {
             gap: '10px',
             textDecoration: 'none',
           }}
-          onMouseEnter={(e) => {
-            const logo = e.currentTarget.querySelector('svg');
-            if (logo) (logo as HTMLElement).style.transform = 'rotate(90deg)';
-          }}
-          onMouseLeave={(e) => {
-            const logo = e.currentTarget.querySelector('svg');
-            if (logo) (logo as HTMLElement).style.transform = 'rotate(0deg)';
-          }}
         >
-          <OrquestaLogo />
-          <span style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: '21px',
-            fontWeight: 500,
-            color: 'var(--ink-900)',
-            letterSpacing: '-0.02em',
-          }}>
-            Orqesta
-          </span>
+          <img
+            src="/orqesta-logo.jpg"
+            alt="Orqesta"
+            style={{
+              height: '36px',
+              width: 'auto',
+              borderRadius: '6px',
+              display: 'block',
+            }}
+          />
         </Link>
 
         {/* Nav links */}
@@ -205,25 +197,4 @@ export function Nav() {
   );
 }
 
-function OrquestaLogo() {
-  return (
-    <svg 
-      width="32" 
-      height="32" 
-      viewBox="0 0 32 32" 
-      fill="none" 
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ 
-        transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' 
-      }}
-    >
-      <rect width="32" height="32" rx="8" fill="var(--ink-900)" />
-      <circle cx="16" cy="16" r="6" stroke="#A8C49A" strokeWidth="1.8" fill="none" />
-      <circle cx="16" cy="16" r="2.5" fill="#A8C49A" />
-      <line x1="16" y1="6" x2="16" y2="10" stroke="#A8C49A" strokeWidth="1.8" strokeLinecap="round" />
-      <line x1="16" y1="22" x2="16" y2="26" stroke="#A8C49A" strokeWidth="1.8" strokeLinecap="round" />
-      <line x1="6" y1="16" x2="10" y2="16" stroke="#A8C49A" strokeWidth="1.8" strokeLinecap="round" />
-      <line x1="22" y1="16" x2="26" y2="16" stroke="#A8C49A" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
+

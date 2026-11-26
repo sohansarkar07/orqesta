@@ -177,24 +177,17 @@ export default function MCP() {
           </Link>
 
           {/* Logo */}
-          <div style={{
-            width: '56px',
-            height: '56px',
-            background: 'rgba(255,255,255,0.15)',
-            borderRadius: '12px',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: '20px',
-          }}>
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-              <circle cx="16" cy="16" r="6" stroke="white" strokeWidth="2" />
-              <circle cx="16" cy="16" r="2" fill="white" />
-              <line x1="16" y1="6" x2="16" y2="10" stroke="white" strokeWidth="2" strokeLinecap="round" />
-              <line x1="16" y1="22" x2="16" y2="26" stroke="white" strokeWidth="2" strokeLinecap="round" />
-              <line x1="6" y1="16" x2="10" y2="16" stroke="white" strokeWidth="2" strokeLinecap="round" />
-              <line x1="22" y1="16" x2="26" y2="16" stroke="white" strokeWidth="2" strokeLinecap="round" />
-            </svg>
+          <div style={{ marginBottom: '20px' }}>
+            <img
+              src="/orqesta-logo.jpg"
+              alt="Orqesta"
+              style={{
+                height: '48px',
+                width: 'auto',
+                borderRadius: '8px',
+                display: 'block',
+              }}
+            />
           </div>
 
           <div style={{ marginBottom: '8px' }}>
