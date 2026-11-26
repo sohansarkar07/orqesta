@@ -109,7 +109,7 @@ export function Nav() {
         )}
 
         {/* CTA */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
           {isApp ? (
             <Link to="/">
               <Button variant="ghost" size="sm" style={{ fontSize: '14px' }}>
@@ -118,35 +118,37 @@ export function Nav() {
             </Link>
           ) : (
             <>
-              <a href="https://github.com/sohansarkar07/orqesta#installation" target="_blank" rel="noopener noreferrer">
+              <Link to="/cli">
                 <button style={{
-                  padding: '10px 20px',
+                  padding: '9px 18px',
                   fontSize: '14px',
                   fontWeight: 500,
                   color: 'var(--ink-700)',
-                  background: 'transparent',
-                  border: 'none',
+                  background: 'white',
+                  border: '1px solid rgba(26,25,22,0.12)',
                   borderRadius: '8px',
                   cursor: 'pointer',
                   transition: 'all 0.2s ease',
                   fontFamily: 'inherit',
                 }}
                 onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(26,25,22,0.24)';
                   e.currentTarget.style.background = 'var(--ivory)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.background = 'transparent';
+                  e.currentTarget.style.borderColor = 'rgba(26,25,22,0.12)';
+                  e.currentTarget.style.background = 'white';
                 }}
                 >
                   Try CLI
                 </button>
-              </a>
-              <a href="https://github.com/sohansarkar07/orqesta/releases" target="_blank" rel="noopener noreferrer">
+              </Link>
+              <Link to="/mcp">
                 <button style={{
-                  padding: '10px 20px',
+                  padding: '9px 18px',
                   fontSize: '14px',
                   fontWeight: 500,
-                  color: 'var(--sage)',
+                  color: 'var(--olive)',
                   background: 'var(--sage-pale)',
                   border: '1px solid #C2D9BC',
                   borderRadius: '8px',
@@ -156,17 +158,19 @@ export function Nav() {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#C2D9BC';
+                  e.currentTarget.style.borderColor = '#A8C49A';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.background = 'var(--sage-pale)';
+                  e.currentTarget.style.borderColor = '#C2D9BC';
                 }}
                 >
-                  Get MCP Bundle
+                  Get Bundle
                 </button>
-              </a>
+              </Link>
               <Link to="/app">
                 <button style={{
-                  padding: '10px 24px',
+                  padding: '9px 22px',
                   fontSize: '14px',
                   fontWeight: 500,
                   color: 'white',
