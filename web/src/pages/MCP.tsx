@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Panel } from '../components/ui/Panel';
 import { Button } from '../components/ui/Button';
 
-type Client = 'claude-desktop' | 'cursor' | 'claude-code' | 'vscode';
+type Client = 'claude-desktop' | 'cursor' | 'claude-code' | 'vscode' | 'kiro' | 'antigravity';
 
 const clientConfigs = {
   'claude-desktop': {
@@ -71,6 +71,45 @@ const clientConfigs = {
       "args": ["-y", "@orqesta/mcp-server"],
       "env": {
         "FLAGSMITH_API_KEY": "your_api_key_here"
+      }
+    }
+  }
+}`,
+  },
+  'kiro': {
+    label: 'Kiro',
+    saveTo: {
+      macos: '~/.kiro/settings/mcp.json',
+      windows: '%USERPROFILE%\\.kiro\\settings\\mcp.json',
+    },
+    config: `{
+  "mcpServers": {
+    "orqesta": {
+      "command": "npx",
+      "args": ["-y", "@orqesta/mcp-server"],
+      "env": {
+        "FLAGSMITH_API_KEY": "ser.xxxxxxxxxxxxxxxx",
+        "FLAGSMITH_API_URL": "https://api.flagsmith.com/api/v1"
+      }
+    }
+  }
+}`,
+  },
+  'antigravity': {
+    label: 'Antigravity',
+    saveTo: {
+      macos: '~/.config/antigravity/mcp.json',
+      windows: '%APPDATA%\\Antigravity\\mcp.json',
+    },
+    config: `{
+  "mcp": {
+    "servers": {
+      "orqesta": {
+        "command": "npx",
+        "args": ["-y", "@orqesta/mcp-server"],
+        "environment": {
+          "FLAGSMITH_API_KEY": "ser.xxxxxxxxxxxxxxxx"
+        }
       }
     }
   }
@@ -202,7 +241,8 @@ export default function MCP() {
 
             {/* Tabs */}
             <div style={{
-              display: 'flex',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
               gap: '8px',
               padding: '6px',
               background: 'var(--ivory-mid)',
@@ -213,7 +253,6 @@ export default function MCP() {
                   key={client}
                   onClick={() => setSelectedClient(client)}
                   style={{
-                    flex: 1,
                     padding: '10px 20px',
                     fontSize: '14px',
                     fontWeight: 500,
