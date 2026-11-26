@@ -1,0 +1,72 @@
+# Flagsmith self-hosted Docker Compose
+# Official file from: https://github.com/Flagsmith/flagsmith/blob/main/docker-compose.yml
+# See https://docs.flagsmith.com/deployment/docker for more information
+
+x-flagsmith-env: &flagsmith-env
+  DATABASE_URL: postgresql://postgres:password@postgres:5432/flagsmith
+  USE_POSTGRES_FOR_ANALYTICS: 'true'
+  ENVIRONMENT: production
+  DJANGO_ALLOWED_HOSTS: '*'
+  FLAGSMITH_DOMAIN: localhost:8000
+  DJANGO_SECRET_KEY: secret-change-in-production
+  WAREHOUSE_CREDENTIALS_SECRET: secret-change-in-production
+  TASK_RUN_METHOD: TASK_PROCESSOR
+  PROMETHEUS_ENABLED: 'true'
+  EXPERIMENTATION_ENABLED: 'true'
+
+volumes:
+  pgdata:
+
+services:
+  postgres:
+    image: postgres:15.5-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: flagsmith
+    container_name: flagsmith_postgres
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -d flagsmith -U postgres']
+      interval: 2s
+      timeout: 2s
+      retries: 20
+      start_period: 20s
+
+  migrate-db:
+    image: docker.flagsmith.com/flagsmith/flagsmith:latest
+    command:
+      - migrate
+    environment:
+      <<: *flagsmith-env
+    healthcheck:
+      disable: true
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  flagsmith:
+    image: docker.flagsmith.com/flagsmith/flagsmith:latest
+    restart: unless-stopped
+    command:
+      - serve
+    environment:
+      <<: *flagsmith-env
+    ports:
+      - 8000:8000
+    depends_on:
+      migrate-db:
+        condition: service_completed_successfully
+
+  flagsmith-task-processor:
+    image: docker.flagsmith.com/flagsmith/flagsmith:latest
+    restart: unless-stopped
+    environment:
+      <<: *flagsmith-env
+    ports:
+      - 8001:8000
+    depends_on:
+      migrate-db:
+        condition: service_completed_successfully
+    command: run-task-processor
