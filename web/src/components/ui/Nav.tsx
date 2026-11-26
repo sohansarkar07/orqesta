@@ -10,25 +10,44 @@ export function Nav() {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      background: 'rgba(247,245,240,0.92)',
+      background: 'rgba(255,255,255,0.85)',
       backdropFilter: 'blur(12px)',
-      borderBottom: 'var(--border-light)',
+      borderBottom: '1px solid rgba(26,25,22,0.08)',
     }}>
-      <div className="container" style={{
+      <div style={{
+        maxWidth: '1400px',
+        margin: '0 auto',
+        padding: '0 48px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: '60px',
+        height: '72px',
       }}>
         {/* Logo */}
-        <Link to="/" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <Link 
+          to="/" 
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '10px',
+            textDecoration: 'none',
+          }}
+          onMouseEnter={(e) => {
+            const logo = e.currentTarget.querySelector('svg');
+            if (logo) (logo as HTMLElement).style.transform = 'rotate(90deg)';
+          }}
+          onMouseLeave={(e) => {
+            const logo = e.currentTarget.querySelector('svg');
+            if (logo) (logo as HTMLElement).style.transform = 'rotate(0deg)';
+          }}
+        >
           <OrquestaLogo />
           <span style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: '20px',
+            fontSize: '21px',
             fontWeight: 500,
             color: 'var(--ink-900)',
-            letterSpacing: '-0.01em',
+            letterSpacing: '-0.02em',
           }}>
             Orqesta
           </span>
@@ -36,15 +55,31 @@ export function Nav() {
 
         {/* Nav links */}
         {!isApp && (
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '32px' }}>
-            {['Features', 'Architecture', 'Docs'].map((item) => (
-              <a key={item} href={`#${item.toLowerCase()}`} style={{
-                fontSize: '14px',
-                color: 'var(--ink-500)',
-                fontWeight: 400,
-                transition: 'color 0.15s',
-              }}>
-                {item}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '40px' }}>
+            {[
+              { label: 'How it works', href: '#features' },
+              { label: 'FAQ', href: '#architecture' },
+              { label: 'Docs', href: '#docs' },
+            ].map((item) => (
+              <a 
+                key={item.label} 
+                href={item.href} 
+                style={{
+                  fontSize: '15px',
+                  color: 'var(--ink-600)',
+                  fontWeight: 400,
+                  textDecoration: 'none',
+                  transition: 'color 0.2s ease',
+                  position: 'relative',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = 'var(--ink-900)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'var(--ink-600)';
+                }}
+              >
+                {item.label}
               </a>
             ))}
           </nav>
@@ -54,15 +89,59 @@ export function Nav() {
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           {isApp ? (
             <Link to="/">
-              <Button variant="ghost" size="sm">← Landing</Button>
+              <Button variant="ghost" size="sm" style={{ fontSize: '14px' }}>
+                ← Back
+              </Button>
             </Link>
           ) : (
             <>
               <a href="https://github.com/sohansarkar07/orqesta" target="_blank" rel="noopener noreferrer">
-                <Button variant="secondary" size="sm">GitHub</Button>
+                <button style={{
+                  padding: '10px 20px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: 'var(--ink-700)',
+                  background: 'transparent',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontFamily: 'inherit',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--ivory)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'transparent';
+                }}
+                >
+                  GitHub
+                </button>
               </a>
               <Link to="/app">
-                <Button variant="primary" size="sm">Open Dashboard</Button>
+                <button style={{
+                  padding: '10px 24px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: 'white',
+                  background: 'var(--ink-900)',
+                  border: 'none',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontFamily: 'inherit',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 4px 12px rgba(26,25,22,0.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = 'none';
+                }}
+                >
+                  Explore Marketplace
+                </button>
               </Link>
             </>
           )}
@@ -74,14 +153,23 @@ export function Nav() {
 
 function OrquestaLogo() {
   return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="28" height="28" rx="7" fill="var(--ink-900)" />
-      <circle cx="14" cy="14" r="5" stroke="#A8C49A" strokeWidth="1.5" fill="none" />
-      <circle cx="14" cy="14" r="2" fill="#A8C49A" />
-      <line x1="14" y1="6" x2="14" y2="9" stroke="#A8C49A" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="14" y1="19" x2="14" y2="22" stroke="#A8C49A" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="6" y1="14" x2="9" y2="14" stroke="#A8C49A" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="19" y1="14" x2="22" y2="14" stroke="#A8C49A" strokeWidth="1.5" strokeLinecap="round" />
+    <svg 
+      width="32" 
+      height="32" 
+      viewBox="0 0 32 32" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+      style={{ 
+        transition: 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)' 
+      }}
+    >
+      <rect width="32" height="32" rx="8" fill="var(--ink-900)" />
+      <circle cx="16" cy="16" r="6" stroke="#A8C49A" strokeWidth="1.8" fill="none" />
+      <circle cx="16" cy="16" r="2.5" fill="#A8C49A" />
+      <line x1="16" y1="6" x2="16" y2="10" stroke="#A8C49A" strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="16" y1="22" x2="16" y2="26" stroke="#A8C49A" strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="6" y1="16" x2="10" y2="16" stroke="#A8C49A" strokeWidth="1.8" strokeLinecap="round" />
+      <line x1="22" y1="16" x2="26" y2="16" stroke="#A8C49A" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
