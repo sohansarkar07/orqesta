@@ -118,7 +118,7 @@ export function Nav() {
             </Link>
           ) : (
             <>
-              <a href="https://github.com/sohansarkar07/orqesta" target="_blank" rel="noopener noreferrer">
+              <a href="https://github.com/sohansarkar07/orqesta#installation" target="_blank" rel="noopener noreferrer">
                 <button style={{
                   padding: '10px 20px',
                   fontSize: '14px',
@@ -138,7 +138,30 @@ export function Nav() {
                   e.currentTarget.style.background = 'transparent';
                 }}
                 >
-                  GitHub
+                  Try CLI
+                </button>
+              </a>
+              <a href="https://github.com/sohansarkar07/orqesta/releases" target="_blank" rel="noopener noreferrer">
+                <button style={{
+                  padding: '10px 20px',
+                  fontSize: '14px',
+                  fontWeight: 500,
+                  color: 'var(--sage)',
+                  background: 'var(--sage-pale)',
+                  border: '1px solid #C2D9BC',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease',
+                  fontFamily: 'inherit',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = '#C2D9BC';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'var(--sage-pale)';
+                }}
+                >
+                  Get MCP Bundle
                 </button>
               </a>
               <Link to="/app">
@@ -163,7 +186,7 @@ export function Nav() {
                   e.currentTarget.style.boxShadow = 'none';
                 }}
                 >
-                  Explore Marketplace
+                  Open Dashboard
                 </button>
               </Link>
             </>
