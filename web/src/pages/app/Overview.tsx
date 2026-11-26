@@ -1,6 +1,8 @@
 import { Panel } from '../../components/ui/Panel';
 import { Badge } from '../../components/ui/Badge';
-import { DEMO_DRIFT, DEMO_POLICY, DEMO_AUDIT } from '../../lib/demo-data';
+import { Button } from '../../components/ui/Button';
+import { useConnectionStatus, useEnvironments } from '../../lib/hooks';
+import { Link } from 'react-router-dom';
 
 function StatCard({ label, value, sub, accent }: { label: string; value: string | number; sub: string; accent: string }) {
   return (
@@ -17,102 +19,148 @@ function StatCard({ label, value, sub, accent }: { label: string; value: string 
 }
 
 export default function Overview() {
-  const recentAudit = DEMO_AUDIT.slice(0, 3);
+  const connectionStatus = useConnectionStatus();
+  const environments = useEnvironments();
 
-  return (
-    <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
-      {/* Page header */}
-      <div>
-        <h1 style={{ fontSize: '24px', fontWeight: 500, color: 'var(--ink-900)' }}>Overview</h1>
-        <p style={{ fontSize: '13px', color: 'var(--ink-400)', marginTop: '4px' }}>
-          Staging → Production · Last checked just now
-        </p>
+  if (connectionStatus.status === 'loading' || environments.status === 'loading') {
+    return (
+      <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <Panel style={{ padding: '48px', textAlign: 'center' }}>
+          <div style={{ fontSize: '24px', marginBottom: '12px', animation: 'spin 1s linear infinite', display: 'inline-block' }}>↻</div>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+          <p style={{ fontSize: '14px', color: 'var(--ink-500)' }}>Loading...</p>
+        </Panel>
       </div>
+    );
+  }
 
-      {/* Stat row */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
-        <StatCard label="Drift items" value={DEMO_DRIFT.summary.total} sub="across 2 environments" accent="var(--status-warn)" />
-        <StatCard label="Policy violations" value={DEMO_POLICY.errors} sub={`${DEMO_POLICY.warnings} warnings`} accent="var(--status-error)" />
-        <StatCard label="Flags passing policy" value={DEMO_POLICY.passed} sub="of 21 checked" accent="var(--status-ok)" />
-        <StatCard label="Recent changes" value={DEMO_AUDIT.length} sub="last 48 hours" accent="var(--ink-700)" />
+  if (connectionStatus.status === 'error') {
+    return (
+      <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <Panel style={{ padding: '48px', textAlign: 'center', background: 'var(--status-err-bg)', border: '1px solid #D9BCBC' }}>
+          <div style={{ fontSize: '32px', marginBottom: '12px', color: 'var(--status-error)' }}>✗</div>
+          <p style={{ fontSize: '16px', fontWeight: 500, color: 'var(--status-error)', marginBottom: '8px' }}>Connection error</p>
+          <p style={{ fontSize: '13px', color: 'var(--ink-500)', marginBottom: '20px' }}>{connectionStatus.error}</p>
+          <Link to="/app/settings">
+            <Button variant="primary" size="sm">Go to Settings</Button>
+          </Link>
+        </Panel>
       </div>
+    );
+  }
 
-      {/* Two-column lower section */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-        {/* Drift summary */}
+  if (connectionStatus.status === 'success' && !connectionStatus.data.connected) {
+    return (
+      <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <Panel style={{ padding: '48px', textAlign: 'center' }}>
+          <div style={{ fontSize: '32px', marginBottom: '16px' }}>⚙</div>
+          <h2 style={{ fontSize: '20px', fontWeight: 500, marginBottom: '8px' }}>Connect to Flagsmith</h2>
+          <p style={{ fontSize: '13px', color: 'var(--ink-400)', marginBottom: '24px', maxWidth: '400px', margin: '0 auto 24px' }}>
+            Orqesta is not connected to a Flagsmith instance. Set your Organisation API Token in Settings to get started.
+          </p>
+          <Link to="/app/settings">
+            <Button variant="primary" size="md">Open Settings</Button>
+          </Link>
+        </Panel>
+      </div>
+    );
+  }
+
+  if (environments.status === 'error') {
+    return (
+      <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <Panel style={{ padding: '48px', textAlign: 'center', background: 'var(--status-err-bg)', border: '1px solid #D9BCBC' }}>
+          <div style={{ fontSize: '32px', marginBottom: '12px', color: 'var(--status-error)' }}>✗</div>
+          <p style={{ fontSize: '16px', fontWeight: 500, color: 'var(--status-error)', marginBottom: '8px' }}>Failed to load environments</p>
+          <p style={{ fontSize: '13px', color: 'var(--ink-500)' }}>{environments.error}</p>
+        </Panel>
+      </div>
+    );
+  }
+
+  if (environments.status === 'success' && connectionStatus.status === 'success') {
+    const envCount = environments.data.reduce((sum, org) => sum + org.projects.reduce((s, p) => s + p.environments.length, 0), 0);
+    const projectCount = environments.data.reduce((sum, org) => sum + org.projects.length, 0);
+
+    if (envCount === 0) {
+      return (
+        <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <Panel style={{ padding: '48px', textAlign: 'center' }}>
+            <div style={{ fontSize: '32px', marginBottom: '16px' }}>📦</div>
+            <h2 style={{ fontSize: '20px', fontWeight: 500, marginBottom: '8px' }}>No environments found</h2>
+            <p style={{ fontSize: '13px', color: 'var(--ink-400)', marginBottom: '24px' }}>
+              Create a project and environments in your Flagsmith dashboard first.
+            </p>
+            <a href="https://app.flagsmith.com" target="_blank" rel="noopener noreferrer">
+              <Button variant="primary" size="sm">Open Flagsmith Dashboard</Button>
+            </a>
+          </Panel>
+        </div>
+      );
+    }
+
+    return (
+      <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
+        <div>
+          <h1 style={{ fontSize: '24px', fontWeight: 500, color: 'var(--ink-900)' }}>Overview</h1>
+          <p style={{ fontSize: '13px', color: 'var(--ink-400)', marginTop: '4px' }}>
+            {connectionStatus.data.organisations?.[0]?.name ?? 'Connected'} · {projectCount} project{projectCount !== 1 ? 's' : ''}, {envCount} environment{envCount !== 1 ? 's' : ''}
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+          <StatCard label="Projects" value={projectCount} sub="accessible" accent="var(--ink-700)" />
+          <StatCard label="Environments" value={envCount} sub="across all projects" accent="var(--status-ok)" />
+          <StatCard label="Organisations" value={connectionStatus.data.organisations?.length ?? 0} sub="connected" accent="var(--sage)" />
+        </div>
+
         <Panel style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h2 style={{ fontSize: '15px', fontWeight: 500 }}>Drift Summary</h2>
-            <Badge variant="warn">{DEMO_DRIFT.summary.total} differences</Badge>
+          <h2 style={{ fontSize: '15px', fontWeight: 500, marginBottom: '16px' }}>Quick Actions</h2>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+            <Link to="/app/compare">
+              <Button variant="secondary" style={{ width: '100%', justifyContent: 'flex-start' }}>
+                ⇄ Compare Environments
+              </Button>
+            </Link>
+            <Link to="/app/sync">
+              <Button variant="secondary" style={{ width: '100%', justifyContent: 'flex-start' }}>
+                ↑ Create Sync Plan
+              </Button>
+            </Link>
+            <Link to="/app/forensics">
+              <Button variant="secondary" style={{ width: '100%', justifyContent: 'flex-start' }}>
+                ⌕ View Audit Log
+              </Button>
+            </Link>
+            <Link to="/app/policy">
+              <Button variant="secondary" style={{ width: '100%', justifyContent: 'flex-start' }}>
+                ✦ Run Policy Checks
+              </Button>
+            </Link>
           </div>
+        </Panel>
+
+        <Panel style={{ padding: '24px' }}>
+          <h2 style={{ fontSize: '15px', fontWeight: 500, marginBottom: '16px' }}>Your Projects</h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {DEMO_DRIFT.drifts.map((d) => (
-              <div key={d.feature} style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: '10px 12px',
+            {environments.data.flatMap((org) => org.projects).map((project) => (
+              <div key={project.id} style={{
+                padding: '12px 16px',
                 background: 'var(--ivory)',
-                borderRadius: 'var(--radius-sm)',
-                border: 'var(--border-light)',
+                border: 'var(--border)',
+                borderRadius: 'var(--radius-md)',
               }}>
-                <div>
-                  <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--ink-800)' }}>{d.feature}</span>
-                  <span style={{ fontSize: '11px', color: 'var(--ink-400)', marginLeft: '8px' }}>{d.description}</span>
+                <div style={{ fontSize: '13px', fontWeight: 500, color: 'var(--ink-900)' }}>{project.name}</div>
+                <div style={{ fontSize: '11px', color: 'var(--ink-300)', marginTop: '3px' }}>
+                  {project.environments.length} environment{project.environments.length !== 1 ? 's' : ''}: {project.environments.map((e) => e.name).join(', ')}
                 </div>
-                <Badge variant={
-                  d.category === 'enabled_state' ? 'warn' :
-                  d.category === 'missing_in_target' ? 'error' : 'info'
-                }>
-                  {d.category.replace(/_/g, ' ')}
-                </Badge>
-              </div>
-            ))}
-          </div>
-        </Panel>
-
-        {/* Recent activity */}
-        <Panel style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-            <h2 style={{ fontSize: '15px', fontWeight: 500 }}>Recent Changes</h2>
-          </div>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
-            {recentAudit.map((entry, i) => (
-              <div key={entry.id} style={{
-                display: 'flex',
-                gap: '12px',
-                padding: '12px 0',
-                borderBottom: i < recentAudit.length - 1 ? 'var(--border-light)' : 'none',
-              }}>
-                {/* Avatar */}
-                <div style={{
-                  width: '32px', height: '32px',
-                  borderRadius: '50%',
-                  background: 'var(--ivory-mid)',
-                  border: 'var(--border)',
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '12px', fontWeight: 600,
-                  color: 'var(--ink-500)',
-                  flexShrink: 0,
-                }}>
-                  {entry.author?.first_name[0]}{entry.author?.last_name[0]}
-                </div>
-                <div style={{ flexGrow: 1, minWidth: 0 }}>
-                  <p style={{ fontSize: '13px', color: 'var(--ink-700)', lineHeight: 1.4, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                    {entry.log}
-                  </p>
-                  <p style={{ fontSize: '11px', color: 'var(--ink-300)', marginTop: '3px' }}>
-                    {entry.author?.first_name} {entry.author?.last_name} · {entry.environment?.name} · {new Date(entry.created_date).toLocaleTimeString()}
-                  </p>
-                </div>
-                <Badge variant={entry.change_type === 'CREATE' ? 'ok' : entry.change_type === 'DELETE' ? 'error' : 'neutral'}>
-                  {entry.change_type ?? 'unknown'}
-                </Badge>
               </div>
             ))}
           </div>
         </Panel>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return null;
 }
