@@ -41,6 +41,14 @@ export interface SyncPlan {
   checksum: string;
 }
 
+export interface SyncResult {
+  success: boolean;
+  applied: number;
+  failed: number;
+  errors?: Array<{ operation: string; message: string }>;
+  plan: SyncPlan;
+}
+
 export interface PolicyViolation {
   ruleId: string;
   severity: 'error' | 'warning' | 'info';
