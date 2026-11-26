@@ -7,6 +7,7 @@ import Compare from './pages/app/Compare';
 import Sync from './pages/app/Sync';
 import Forensics from './pages/app/Forensics';
 import Policy from './pages/app/Policy';
+import Settings from './pages/app/Settings';
 
 export default function App() {
   return (
@@ -20,6 +21,7 @@ export default function App() {
           <Route path="sync"      element={<Sync />} />
           <Route path="forensics" element={<Forensics />} />
           <Route path="policy"    element={<Policy />} />
+          <Route path="settings"  element={<Settings />} />
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
