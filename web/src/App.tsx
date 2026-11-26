@@ -1,0 +1,28 @@
+import { Routes, Route, Navigate } from 'react-router-dom';
+import { Nav } from './components/ui/Nav';
+import Landing from './pages/Landing';
+import AppLayout from './pages/app/AppLayout';
+import Overview from './pages/app/Overview';
+import Compare from './pages/app/Compare';
+import Sync from './pages/app/Sync';
+import Forensics from './pages/app/Forensics';
+import Policy from './pages/app/Policy';
+
+export default function App() {
+  return (
+    <>
+      <Nav />
+      <Routes>
+        <Route path="/" element={<Landing />} />
+        <Route path="/app" element={<AppLayout />}>
+          <Route index element={<Overview />} />
+          <Route path="compare"   element={<Compare />} />
+          <Route path="sync"      element={<Sync />} />
+          <Route path="forensics" element={<Forensics />} />
+          <Route path="policy"    element={<Policy />} />
+        </Route>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </>
+  );
+}
