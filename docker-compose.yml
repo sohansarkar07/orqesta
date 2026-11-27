@@ -1,5 +1,17 @@
 version: '3.8'
 
+# Self-hosted Flagsmith + Orqesta
+#
+# After starting:
+#   1. Open http://localhost:8000 — create admin account + organisation
+#   2. Create a project + two environments (e.g. Staging, Production)
+#   3. Go to Organisation → API Access → Create API Key
+#   4. Copy the token and set it below (ORQUESTA_API_TOKEN) OR in Orqesta Settings UI
+#   5. Open Orqesta: http://localhost:3001
+#
+# Note: inside Docker the Flagsmith API is at http://flagsmith:8000/api/v1
+# From your host browser the same URL is http://localhost:8000/api/v1
+
 services:
   # Self-hosted Flagsmith (PostgreSQL-backed)
   flagsmith:
@@ -16,6 +28,11 @@ services:
       - postgres
     networks:
       - orqesta-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8000/health/"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   postgres:
     image: postgres:14-alpine
@@ -29,18 +46,24 @@ services:
     networks:
       - orqesta-network
 
-  # Orqesta API + Web UI (optional - can also run locally)
+  # Orqesta API + Web UI
   orqesta:
     build: .
     container_name: orqesta
     ports:
       - "3001:3001"
     environment:
-      FLAGSMITH_API_URL: http://flagsmith:8000/api/v1
-      # Set this after creating an org + API key in Flagsmith UI
-      # FLAGSMITH_API_KEY: ser.xxxxxxxxxxxxxxxx
+      NODE_ENV: production
+      PORT: 3001
+      # Management API — container-to-container URL
+      ORQUESTA_API_URL: http://flagsmith:8000/api/v1
+      # Set after creating an org + API key in Flagsmith UI:
+      # ORQUESTA_API_TOKEN: your_token_here
+      # Flags API — also points to self-hosted
+      ORQUESTA_FLAGS_API_URL: http://flagsmith:8000/api/v1
     depends_on:
-      - flagsmith
+      flagsmith:
+        condition: service_healthy
     networks:
       - orqesta-network
 

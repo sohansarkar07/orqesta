@@ -1,225 +1,168 @@
-# 🚀 Orqesta — Quick Start (5 Minutes)
+# Orqesta — Quick Start
 
-**For Toggle Wars Hackathon Judges & Users**
-
-This guide gets Orqesta + self-hosted Flagsmith running in one command.
+Get Orqesta running in under 10 minutes.
 
 ---
 
-## ⚡ Option 1: Docker Compose (Recommended)
+## Option A — Docker (self-hosted Flagsmith + Orqesta)
 
-Runs **self-hosted Flagsmith** + **Orqesta** together.
+Runs everything locally: Flagsmith, PostgreSQL, and Orqesta.
 
-### Prerequisites
-- Docker + Docker Compose installed
-- 5 minutes
-
-### Steps
+**Prerequisites:** Docker Desktop installed and running.
 
 ```bash
-# 1. Clone the repo
 git clone https://github.com/sohansarkar07/orqesta.git
 cd orqesta
-
-# 2. Start everything (Flagsmith + PostgreSQL + Orqesta)
-docker-compose up -d
-
-# 3. Wait 30 seconds for Flagsmith to initialize
-sleep 30
-
-# 4. Open Flagsmith UI
-open http://localhost:8000
+docker compose up -d
 ```
 
-### First-Time Setup in Flagsmith UI:
-1. **Create admin account** at http://localhost:8000
-2. **Create an organisation** (e.g. "My Org")
-3. **Create a project** (e.g. "Demo App")
-4. **Create 2 environments**: `Staging` and `Production`
-5. **Add 2-3 feature flags** in each environment
-6. **Get API key**: Organisation Settings → API Keys → Copy token
+Wait about 30 seconds for Flagsmith to initialise, then:
 
-### Connect Orqesta to Flagsmith:
-1. **Open Orqesta**: http://localhost:3001
-2. **Go to Settings** (sidebar)
-3. **Paste your API key** (from step 6 above)
-4. **Set API URL**: `http://flagsmith:8000/api/v1` (already pre-configured in Docker)
-5. **Click Connect**
+**1. Set up Flagsmith** — open http://localhost:8000
+- Create an admin account
+- Create an organisation (e.g. "Demo Org")
+- Create a project (e.g. "Demo App")
+- Create two environments: `Staging` and `Production`
+- Add a few feature flags in each with different values
 
-### Try It Out:
-- **Overview**: See your projects and environments
-- **Compare**: Select `Staging` → `Production` → see drift
-- **Sync**: Generate a sync plan → review → apply
-- **Forensics**: View audit log of all changes
-- **Policy**: Run governance checks
+**2. Get your API token** — click your organisation name → **API Access** tab → **Create API Key** → copy the token
+
+**3. Seed demo data** (optional — creates flags with intentional drift):
+
+```bash
+export ORQUESTA_API_TOKEN="your_token_here"
+export ORQUESTA_API_URL="http://localhost:8000/api/v1"
+npx tsx scripts/seed-demo-data.ts
+```
+
+**4. Open Orqesta** — http://localhost:3001
+- Go to **Settings** (sidebar)
+- Paste your API token
+- Set API URL to `http://localhost:8000/api/v1`
+- Click **Connect**
+
+> **Note:** Use `http://localhost:8000/api/v1` in the Orqesta Settings UI (host-to-host).  
+> The Docker Compose file already pre-sets `http://flagsmith:8000/api/v1` for container-to-container communication.
 
 ---
 
-## ⚡ Option 2: Local Development (npm)
+## Option B — Flagsmith Cloud + local dev
 
-Use cloud Flagsmith (or your own hosted instance).
+No Docker needed. Uses your existing Flagsmith Cloud account.
 
-### Prerequisites
-- Node.js 18+
-- Flagsmith account (https://flagsmith.com)
-
-### Steps
+**Prerequisites:** Node.js 18+, Flagsmith account at https://flagsmith.com
 
 ```bash
-# 1. Clone + install
 git clone https://github.com/sohansarkar07/orqesta.git
 cd orqesta
 npm install
+```
 
-# 2. Start API server
+Get your token from https://app.flagsmith.com → Organisation name → API Access → Create API Key.
+
+**Start the API server:**
+```bash
+export ORQUESTA_API_TOKEN="your_token_here"
 npm run server
-# Runs on http://localhost:3001
+# Running at http://localhost:3001
+```
 
-# 3. Start frontend (new terminal)
+**Start the web dashboard (new terminal):**
+```bash
 cd web
 npm run dev
-# Runs on http://localhost:5173
+# Running at http://localhost:5173
 ```
 
-### Connect to Flagsmith:
-1. **Get API key** from https://app.flagsmith.com → Organisation Settings → API Keys
-2. **Open Orqesta**: http://localhost:5173/app/settings
-3. **Paste API key** + click Connect
+Open http://localhost:5173/app — the dashboard will connect automatically using the token from your environment.
 
 ---
 
-## ⚡ Option 3: CLI Only (No Web UI)
-
-Just use the CLI commands directly.
+## Option C — CLI only
 
 ```bash
-# Install
+git clone https://github.com/sohansarkar07/orqesta.git
+cd orqesta
 npm install
+npm run build
+npm link
 
-# Configure
-export FLAGSMITH_API_KEY=ser.xxxxxxxxxxxxxxxx
-export FLAGSMITH_API_URL=https://api.flagsmith.com/api/v1
-
-# Run commands
-npm run cli -- compare Staging Production
-npm run cli -- sync Staging Production --dry-run
-npm run cli -- inspect my_feature --with-changes
-npm run cli -- lint Production --policy ./examples/policy.yml
+export ORQUESTA_API_TOKEN="your_token_here"
+orqesta doctor
 ```
 
 ---
 
-## 🎯 What to Try (Demo Script)
+## Environment Variables
 
-### 1. **Compare Environments**
-```bash
-# Web UI: Compare → Select project + Staging → Production
-# CLI: npm run cli -- compare Staging Production
-```
-See drift in:
-- Enabled states
-- Remote config values
-- Multivariate allocations
-- Missing flags
+| Variable | Required | Description |
+|---|---|---|
+| `ORQUESTA_API_TOKEN` | Yes | Flagsmith Organisation API token |
+| `ORQUESTA_API_URL` | No | Management API URL (default: `https://api.flagsmith.com/api/v1`) |
+| `ORQUESTA_ENVIRONMENT_KEY` | No | Server-side environment key (`ser.` prefix) — optional performance boost |
+| `ORQUESTA_FLAGS_API_URL` | No | Flags API URL (default: `https://edge.api.flagsmith.com/api/v1`) |
+| `FLAGSMITH_API_KEY` | No | Legacy alias for `ORQUESTA_API_TOKEN` |
 
-### 2. **Sync Environments**
-```bash
-# Web UI: Sync → Generate Plan → Review → Apply (or Dry-run)
-# CLI: npm run cli -- sync Staging Production --dry-run
-```
-Features:
-- Interactive approval (select which operations to apply)
-- Dry-run mode (preview without changes)
-- Stale-plan protection (detects concurrent changes)
-
-### 3. **Audit Log (Forensics)**
-```bash
-# Web UI: Forensics → Select project + environment
-# CLI: npm run cli -- inspect my_feature --with-changes
-```
-Shows:
-- Who changed what
-- When
-- Before/after values for each field
-
-### 4. **Policy Checks**
-```bash
-# Web UI: Policy → Run Policy Check
-# CLI: npm run cli -- lint Production --policy ./examples/policy.yml
-```
-Built-in rules:
-- Naming conventions (snake_case)
-- Required descriptions
-- No archived flags enabled
-- Multivariate allocation validation
-- Cross-environment parity checks
+For self-hosted, set both `ORQUESTA_API_URL` and `ORQUESTA_FLAGS_API_URL` to your instance URL.
 
 ---
 
-## 📊 Expected Output
+## First commands to try
 
-### After `docker-compose up`:
-```
-✓ PostgreSQL started on :5432
-✓ Flagsmith started on :8000
-✓ Orqesta started on :3001
-```
+```bash
+# 1. Confirm connectivity
+orqesta doctor
 
-### After connecting in UI:
-```
-✓ Connected to Flagsmith
-  Org: My Org
-  Projects: 1
-  Environments: 2
-```
+# 2. List your environments
+orqesta environments
 
-### After running Compare:
-```
-Environment Comparison
-Staging → Production
+# 3. Detect drift
+orqesta compare Staging Production
 
-4 DIFFERENCES
-├─ 1 Enabled state
-├─ 2 Value changes
-└─ 1 Missing in target
+# 4. Generate sync plan
+orqesta plan Staging Production
+
+# 5. Preview without writing
+orqesta apply --dry-run
+
+# 6. Apply with confirmation gate
+orqesta apply
+
+# 7. Verify environments are now in sync
+orqesta verify Staging Production
+
+# 8. Run policy checks
+orqesta lint Production
+
+# 9. Check for audience allocation regressions (MV flags only)
+orqesta guard Staging Production
 ```
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
-### "Cannot connect to Flagsmith"
-- **Docker**: Wait 60s for Flagsmith to fully start: `docker-compose logs flagsmith`
-- **Cloud**: Check API key is valid and has Organisation scope
+**"Management API connectivity" check fails**
+- Verify your token is an Organisation API Token (from Organisation Settings → API Access), not an environment SDK key
+- For self-hosted, confirm Flagsmith is running: `docker compose logs flagsmith`
+- Run `orqesta doctor` — it shows which checks pass and which fail
 
-### "Port 3001 already in use"
+**Docker: Orqesta connects to Flagsmith but sees no data**
+- After creating your API token in the Flagsmith UI, update the Orqesta Settings page with the token and URL `http://localhost:8000/api/v1`
+
+**"No projects found"**
+- Create a project in the Flagsmith dashboard first, then run `orqesta environments`
+
+**Port 3001 already in use**
 ```bash
-# Kill existing process
-lsof -ti:3001 | xargs kill -9
-
-# Or change port
 PORT=4001 npm run server
 ```
 
-### "No projects found"
-- Create a project + environment in Flagsmith UI first
-- Make sure API key has correct scope (Organisation-level)
+**Self-hosted Flagsmith not starting**
+```bash
+docker compose logs flagsmith
+# Common cause: PostgreSQL not ready yet — wait 30s and try again
+```
 
----
-
-## 📚 Next Steps
-
-- **Full docs**: [README.md](./README.md)
-- **API docs**: http://localhost:3001/api/health
-- **Example policy**: [examples/policy.yml](./examples/policy.yml)
-- **Tests**: `npm test` (95 tests)
-
----
-
-## 🎥 Video Demo
-
-[TODO: Add Loom/YouTube link for hackathon submission]
-
----
-
-**Built for Toggle Wars Hackathon — Track 03: Build on Open Source Flagsmith**
+**Secret masking**  
+API tokens are never sent to the browser and never logged. The dashboard and all CLI output show masked versions like `Md2C…xJeu`.

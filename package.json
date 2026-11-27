@@ -9,13 +9,16 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/cli/index.ts",
+    "cli": "tsx src/cli/index.ts",
     "server": "tsx server/index.ts",
     "server:prod": "node dist/server/index.js",
+    "web": "npm run dev --prefix web",
     "test": "vitest run",
     "test:server": "vitest run server/tests",
     "test:all": "vitest run",
     "test:watch": "vitest",
-    "lint": "tsc --noEmit"
+    "lint": "tsc --noEmit",
+    "seed": "tsx scripts/seed-demo-data.ts"
   },
   "keywords": [
     "flagsmith",

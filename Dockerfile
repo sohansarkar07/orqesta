@@ -2,31 +2,37 @@ FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Install dependencies
+# Install backend dependencies
 COPY package*.json ./
 RUN npm ci
 
-# Copy source
+# Install frontend dependencies
+COPY web/package*.json ./web/
+RUN cd web && npm ci
+
+# Copy all source
 COPY . .
 
-# Build CLI + Web
+# Build backend (TypeScript → dist/)
 RUN npm run build
 
-# Production image
+# Build frontend (React → web/dist/)
+RUN cd web && npm run build
+
+# ─── Production image ─────────────────────────────────────────────────────────
 FROM node:18-alpine
 
 WORKDIR /app
 
-# Copy built artifacts and dependencies
-COPY --from=builder /app/package*.json ./
+# Production backend dependencies only
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# Built artifacts
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/web/dist ./web/dist
-COPY --from=builder /app/server ./server
-
-# Install production dependencies only
-RUN npm ci --only=production
 
 EXPOSE 3001
 
-# Start Express server (serves API + static React files)
+# The Express server serves both the API and the React frontend in production
 CMD ["node", "dist/server/index.js"]
