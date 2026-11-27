@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+﻿import { Link } from 'react-router-dom';
 import React from 'react';
 import { Button } from '../components/ui/Button';
 import { Panel } from '../components/ui/Panel';
@@ -12,7 +12,7 @@ function XIcon() {
   );
 }
 
-/* ─── Token strip ─────────────────────────────────────────────────────────── */
+/* â”€â”€â”€ Token strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function TokenStrip() {
   const tokens = [
     'Environment Drift Detection',
@@ -45,7 +45,7 @@ function TokenStrip() {
             textTransform: 'uppercase',
             color: 'var(--ink-500)',
           }}>
-            <span style={{ color: 'var(--sage)', marginRight: '12px' }}>◆</span>
+            <span style={{ color: 'var(--sage)', marginRight: '12px' }}>â—†</span>
             {t}
           </span>
         ))}
@@ -55,7 +55,7 @@ function TokenStrip() {
   );
 }
 
-/* ─── Hero ────────────────────────────────────────────────────────────────── */
+/* â”€â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function Hero() {
   return (
     <section style={{
@@ -66,7 +66,7 @@ function Hero() {
     }}
     className="hero-grid"
     >
-      {/* Left — text */}
+      {/* Left â€” text */}
       <div
         className="hero-left"
         style={{
@@ -100,7 +100,7 @@ function Hero() {
             fontWeight: 300,
           }}>
             Orqesta brings configuration safety to Flagsmith. Compare environments,
-            investigate changes with forensics, and enforce policies — all before
+            investigate changes with forensics, and enforce policies â€” all before
             production deploys.
           </p>
         </div>
@@ -146,19 +146,19 @@ function Hero() {
         </div>
       </div>
 
-      {/* Right — interactive demo panel */}
+      {/* Right â€” demo video */}
       <div
         className="hero-right"
         style={{
-        background: 'linear-gradient(135deg, #E8E4DC 0%, #D6D2CA 100%)',
-        position: 'relative',
-        overflow: 'hidden',
-        borderLeft: 'var(--border)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '64px 48px',
-      }}>
+          background: 'linear-gradient(135deg, #E8E4DC 0%, #D6D2CA 100%)',
+          position: 'relative',
+          overflow: 'hidden',
+          borderLeft: 'var(--border)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px 40px',
+        }}>
         {/* Background texture */}
         <div style={{
           position: 'absolute',
@@ -168,141 +168,33 @@ function Hero() {
           pointerEvents: 'none',
         }} />
 
-        {/* Demo card — drift comparison */}
+        {/* Video */}
         <div style={{
           position: 'relative',
           width: '100%',
-          maxWidth: '480px',
-          background: 'white',
+          maxWidth: '500px',
           borderRadius: '12px',
-          boxShadow: '0 20px 60px rgba(26,25,22,0.15), 0 4px 12px rgba(26,25,22,0.08)',
           overflow: 'hidden',
+          boxShadow: '0 20px 60px rgba(26,25,22,0.18), 0 4px 12px rgba(26,25,22,0.1)',
         }}>
-          {/* Card header */}
-          <div style={{
-            padding: '20px 24px',
-            borderBottom: 'var(--border-light)',
-            background: 'var(--ivory)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#5B8A4A' }} />
-              <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--ink-700)', fontFamily: '"SF Mono", monospace' }}>
-                COMPARE RESULTS
-              </span>
-            </div>
-            <div style={{
-              padding: '4px 10px',
-              background: 'var(--status-warn-bg)',
-              borderRadius: '100px',
-              fontSize: '11px',
-              fontWeight: 600,
-              color: 'var(--status-warn)',
-            }}>
-              4 DIFFERENCES
-            </div>
-          </div>
-
-          {/* Environment labels */}
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: '1fr auto 1fr',
-            padding: '16px 24px 12px',
-            alignItems: 'center',
-            gap: '12px',
-            borderBottom: 'var(--border-light)',
-            background: 'var(--ivory)',
-          }}>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--sage)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Staging</span>
-            <span style={{ fontSize: '14px', color: 'var(--ink-300)' }}>→</span>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--olive)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Production</span>
-          </div>
-
-          {/* Drift rows */}
-          <div style={{ padding: '16px 24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-            {[
-              { flag: 'checkout_redesign', type: 'Enabled state', color: '#D9C88C' },
-              { flag: 'dark_mode', type: 'Value change', color: '#A8C49A' },
-              { flag: 'new_onboarding', type: 'Missing in target', color: '#D9BCBC' },
-              { flag: 'api_rate_limit', type: 'Value change', color: '#A8C49A' },
-            ].map((item, i) => (
-              <div key={i} style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr auto',
-                gap: '12px',
-                alignItems: 'center',
-                padding: '12px 16px',
-                background: 'var(--ivory)',
-                borderRadius: '8px',
-                border: 'var(--border-light)',
-              }}>
-                <div>
-                  <div style={{ fontSize: '13px', fontWeight: 500, fontFamily: '"SF Mono", monospace', color: 'var(--ink-900)' }}>
-                    {item.flag}
-                  </div>
-                  <div style={{ fontSize: '11px', color: 'var(--ink-400)', marginTop: '3px' }}>
-                    {item.type}
-                  </div>
-                </div>
-                <div style={{
-                  width: '8px',
-                  height: '8px',
-                  borderRadius: '50%',
-                  background: item.color,
-                }} />
-              </div>
-            ))}
-          </div>
-
-          {/* Footer action */}
-          <div style={{
-            padding: '14px 24px',
-            borderTop: 'var(--border-light)',
-            background: 'var(--ivory)',
-            display: 'flex',
-            justifyContent: 'flex-end',
-          }}>
-            <button style={{
-              padding: '8px 16px',
-              background: 'var(--ink-900)',
-              color: 'white',
-              border: 'none',
-              borderRadius: '6px',
-              fontSize: '12px',
-              fontWeight: 500,
-              cursor: 'pointer',
-              transition: 'opacity 0.15s',
-            }}>
-              Generate Sync Plan →
-            </button>
-          </div>
-        </div>
-
-        {/* Floating label */}
-        <div style={{
-          position: 'absolute',
-          bottom: '32px',
-          right: '32px',
-          padding: '8px 14px',
-          background: 'rgba(255,255,255,0.9)',
-          borderRadius: '100px',
-          fontSize: '10px',
-          fontWeight: 600,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          color: 'var(--ink-500)',
-          boxShadow: '0 2px 8px rgba(26,25,22,0.1)',
-        }}>
-          Live Demo
+          <video
+            src="/orqesta-demo.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            style={{
+              width: '100%',
+              height: 'auto',
+              display: 'block',
+            }}
+          />
         </div>
       </div>
     </section>
   );
 }
-
-/* ─── Feature cards ───────────────────────────────────────────────────────── */
+/* â”€â”€â”€ Feature cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 interface FeatureCardProps {
   number: string;
   title: string;
@@ -365,7 +257,7 @@ function Features() {
           <FeatureCard
             number="01"
             title="Drift Detection & Selective Sync"
-            description="Compare any two Flagsmith environments. See exactly what differs — enabled state, remote config values, multivariate allocations. Generate a typed plan, preview it, then apply with a stale-plan safety check."
+            description="Compare any two Flagsmith environments. See exactly what differs â€” enabled state, remote config values, multivariate allocations. Generate a typed plan, preview it, then apply with a stale-plan safety check."
             command="orqesta compare Staging Production"
             accent="var(--sage)"
           />
@@ -389,7 +281,7 @@ function Features() {
   );
 }
 
-/* ─── Safety callout ──────────────────────────────────────────────────────── */
+/* â”€â”€â”€ Safety callout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function SafetySection() {
   const checks = [
     'Stale-plan detection: target state snapshot compared before every apply',
@@ -397,7 +289,7 @@ function SafetySection() {
     'Interactive y/N gate on production changes',
     'API keys masked in all output, never logged',
     'Post-apply verification re-fetches and re-diffs',
-    'Partial failures reported individually — never silently swallowed',
+    'Partial failures reported individually â€” never silently swallowed',
   ];
 
   return (
@@ -435,7 +327,7 @@ function SafetySection() {
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid rgba(168,196,154,0.12)',
               }}>
-                <span style={{ color: 'var(--sage-light)', fontSize: '14px', marginTop: '1px', flexShrink: 0 }}>✓</span>
+                <span style={{ color: 'var(--sage-light)', fontSize: '14px', marginTop: '1px', flexShrink: 0 }}>âœ“</span>
                 <span style={{ fontSize: '13px', color: '#C8C4BC', lineHeight: 1.5 }}>{check}</span>
               </div>
             ))}
@@ -446,7 +338,7 @@ function SafetySection() {
   );
 }
 
-/* ─── Architecture section ────────────────────────────────────────────────── */
+/* â”€â”€â”€ Architecture section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function Architecture() {
   React.useEffect(() => {
     // Dynamically load and initialize mermaid
@@ -559,7 +451,7 @@ function Architecture() {
   );
 }
 
-/* ─── Install section ─────────────────────────────────────────────────────── */
+/* â”€â”€â”€ Install section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function Install() {
   return (
     <section id="docs" style={{ padding: '100px 0', background: 'var(--ivory)' }} className="section-pad">
@@ -599,7 +491,7 @@ function Install() {
   );
 }
 
-/* ─── FAQ ─────────────────────────────────────────────────────────────────── */
+/* â”€â”€â”€ FAQ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function FAQ() {
   const faqs = [
     {
@@ -612,7 +504,7 @@ function FAQ() {
     },
     {
       q: 'What is stale-plan protection?',
-      a: 'When you generate a sync plan, Orqesta snapshots the target environment state. Before applying, it re-checks for concurrent changes. If another user modified the target in the meantime, those operations are skipped — no silent overwrites.',
+      a: 'When you generate a sync plan, Orqesta snapshots the target environment state. Before applying, it re-checks for concurrent changes. If another user modified the target in the meantime, those operations are skipped â€” no silent overwrites.',
     },
     {
       q: 'Can I use Orqesta in CI/CD pipelines?',
@@ -714,7 +606,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   );
 }
 
-/* ─── Footer ──────────────────────────────────────────────────────────────── */
+/* â”€â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 function Footer() {
   const cols = [
     {
@@ -842,7 +734,7 @@ function Footer() {
           gap: '8px',
         }}>
           <span style={{ fontSize: '13px', color: 'var(--ink-400)' }}>
-            © 2026 Orqesta. Open source under MIT.
+            Â© 2026 Orqesta. Open source under MIT.
           </span>
         </div>
       </div>
@@ -858,7 +750,7 @@ function GitHubIcon() {
   );
 }
 
-/* ─── Page ────────────────────────────────────────────────────────────────── */
+/* â”€â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 export default function Landing() {
   return (
     <>
