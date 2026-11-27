@@ -96,10 +96,12 @@ img { display: block; max-width: 100%; }
     grid-template-columns: 1fr !important;
   }
   .hero-right {
-    display: none !important;
+    display: flex !important;
+    min-height: 260px;
+    padding: 24px !important;
   }
   .hero-left {
-    padding: 56px 24px !important;
+    padding: 56px 24px 32px !important;
     max-width: 100% !important;
   }
 }
