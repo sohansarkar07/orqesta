@@ -27,7 +27,7 @@ function CodeBlock({ code, language = 'bash' }: { code: string; language?: strin
 
 export default function CLI() {
   return (
-    <div style={{
+    <div className="page-single-col" style={{
       maxWidth: '900px',
       margin: '0 auto',
       padding: '48px 48px 80px',

@@ -1,9 +1,12 @@
 import { Link } from 'react-router-dom';
+import React from 'react';
 import { Panel } from '../components/ui/Panel';
 import { Button } from '../components/ui/Button';
 
 /* ─── Sidebar Navigation ───────────────────────────────────────────────────── */
 function DocsSidebar({ activeSection }: { activeSection: string }) {
+  const [navOpen, setNavOpen] = React.useState(false);
+
   const sections = [
     { id: 'introduction', label: 'Introduction' },
     { id: 'quick-start', label: 'Quick Start' },
@@ -21,7 +24,7 @@ function DocsSidebar({ activeSection }: { activeSection: string }) {
   ];
 
   return (
-    <aside style={{
+    <aside className="docs-sidebar" style={{
       position: 'sticky',
       top: '90px',
       width: '240px',
@@ -30,43 +33,49 @@ function DocsSidebar({ activeSection }: { activeSection: string }) {
       paddingRight: '24px',
       flexShrink: 0,
     }}>
-      <div style={{ marginBottom: '24px' }}>
+      {/* Label + mobile toggle */}
+      <div style={{ marginBottom: '12px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <p style={{
-          fontSize: '11px',
-          fontWeight: 600,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          color: 'var(--ink-300)',
-          marginBottom: '12px',
+          fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em',
+          textTransform: 'uppercase', color: 'var(--ink-300)', margin: 0,
         }}>
           Documentation
         </p>
+        {/* Mobile toggle — shown via CSS */}
+        <button
+          className="docs-sidebar-toggle"
+          onClick={() => setNavOpen(!navOpen)}
+          style={{
+            display: 'none', // shown via CSS on mobile
+            background: 'none', border: 'none', cursor: 'pointer',
+            fontSize: '13px', color: 'var(--ink-500)', fontFamily: 'inherit',
+            padding: '4px 8px', borderRadius: '4px',
+            alignItems: 'center', gap: '4px',
+          }}
+        >
+          {navOpen ? 'Hide ▲' : 'Show sections ▼'}
+        </button>
       </div>
-      <nav style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+
+      <nav
+        className={`docs-sidebar-nav${navOpen ? ' open' : ''}`}
+        style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}
+      >
         {sections.map((section) => (
           <a
             key={section.id}
             href={`#${section.id}`}
+            onClick={() => setNavOpen(false)}
             style={{
-              padding: '8px 12px',
-              fontSize: '14px',
+              padding: '8px 12px', fontSize: '14px',
               color: activeSection === section.id ? 'var(--ink-900)' : 'var(--ink-500)',
               background: activeSection === section.id ? 'var(--ivory)' : 'transparent',
-              borderRadius: '6px',
-              textDecoration: 'none',
+              borderRadius: '6px', textDecoration: 'none',
               fontWeight: activeSection === section.id ? 500 : 400,
               transition: 'all 0.15s',
             }}
-            onMouseEnter={(e) => {
-              if (activeSection !== section.id) {
-                e.currentTarget.style.background = 'var(--ivory-mid)';
-              }
-            }}
-            onMouseLeave={(e) => {
-              if (activeSection !== section.id) {
-                e.currentTarget.style.background = 'transparent';
-              }
-            }}
+            onMouseEnter={(e) => { if (activeSection !== section.id) e.currentTarget.style.background = 'var(--ivory-mid)'; }}
+            onMouseLeave={(e) => { if (activeSection !== section.id) e.currentTarget.style.background = 'transparent'; }}
           >
             {section.label}
           </a>
@@ -79,12 +88,13 @@ function DocsSidebar({ activeSection }: { activeSection: string }) {
 /* ─── Code Block ───────────────────────────────────────────────────────────── */
 function CodeBlock({ code, language = 'bash' }: { code: string; language?: string }) {
   return (
-    <Panel style={{
+    <Panel className="docs-code" style={{
       padding: '16px 20px',
       background: 'var(--ink-900)',
       border: 'none',
       marginTop: '12px',
       marginBottom: '20px',
+      overflow: 'auto',
     }}>
       <code style={{
         fontFamily: '"SF Mono", "Fira Code", monospace',
@@ -149,7 +159,7 @@ function Paragraph({ children }: { children: React.ReactNode }) {
 /* ─── Main Docs Content ────────────────────────────────────────────────────── */
 function DocsContent() {
   return (
-    <article style={{ maxWidth: '740px', flexGrow: 1 }}>
+    <article className="docs-content" style={{ maxWidth: '740px', flexGrow: 1, minWidth: 0 }}>
       {/* Introduction */}
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '48px', fontWeight: 500, marginBottom: '16px' }}>
@@ -497,7 +507,7 @@ docker-compose down`} />
 /* ─── Main Page ────────────────────────────────────────────────────────────── */
 export default function Docs() {
   return (
-    <div style={{
+    <div className="docs-layout" style={{
       maxWidth: '1400px',
       margin: '0 auto',
       padding: '48px 48px 80px',

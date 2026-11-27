@@ -186,6 +186,34 @@ img { display: block; max-width: 100%; }
   .sidebar-overlay { display: none !important; }
 }
 
+/* ─── Docs page ───────────────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .docs-layout {
+    flex-direction: column !important;
+    padding: 24px 20px 60px !important;
+    gap: 0 !important;
+  }
+  .docs-sidebar {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding-right: 0 !important;
+    border-bottom: 1px solid rgba(26,25,22,0.08);
+    margin-bottom: 32px;
+  }
+  .docs-sidebar-toggle { display: flex !important; }
+  .docs-sidebar-nav { display: none; }
+  .docs-sidebar-nav.open { display: flex !important; }
+  .docs-content { max-width: 100% !important; }
+  .docs-code code { white-space: pre-wrap !important; word-break: break-all !important; }
+}
+@media (max-width: 768px) {
+  .page-single-col {
+    padding: 32px 20px 60px !important;
+  }
+}
+
 /* App pages inner content padding */
 @media (max-width: 768px) {
   .app-page {
