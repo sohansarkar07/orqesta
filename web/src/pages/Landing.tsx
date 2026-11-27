@@ -118,12 +118,6 @@ function Hero() {
               GitHub
             </Button>
           </a>
-          <a href="https://x.com/orqesta_flag" target="_blank" rel="noopener noreferrer">
-            <Button variant="secondary" size="lg" style={{ fontSize: '15px', padding: '14px 20px', gap: '10px' }}>
-              <XIcon />
-              Follow
-            </Button>
-          </a>
         </div>
 
         {/* Meta tags */}
