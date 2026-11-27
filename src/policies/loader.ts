@@ -88,6 +88,12 @@ function getDefaultPolicy(): Policy {
         pattern: '^[a-z][a-z0-9_]*$',
       },
       {
+        id: 'default-require-description',
+        description: 'Features should have descriptions',
+        severity: 'warning',
+        rule: 'require_description',
+      },
+      {
         id: 'default-no-archived-enabled',
         description: 'Archived flags must not be enabled',
         severity: 'error',

@@ -16,6 +16,7 @@ import { verifyCommand } from './commands/verify.js';
 import { reportCommand } from './commands/report.js';
 import { lintCommand } from './commands/lint.js';
 import { guardCommand } from './commands/guard.js';
+import { evalCommand } from './commands/eval.js';
 import {
   configShowCommand,
   configSetKeyCommand,
@@ -132,6 +133,19 @@ program
   .option('-o, --output <file>', 'Output file path')
   .action(async (source: string, target: string, opts: { project?: string; format?: 'markdown' | 'json'; output?: string }) => {
     await reportCommand(source, target, opts);
+  });
+
+// ─── eval ─────────────────────────────────────────────────────────────────────
+program
+  .command('eval <source> <target>')
+  .description('Identity-level evaluation: compare how synthetic identities are resolved across two environments')
+  .option('-p, --project <name-or-id>', 'Project name or ID')
+  .option('-f, --fixtures <path>', 'Path to identity fixture file (default: orqesta-identities.yml)')
+  .option('--features <names>', 'Comma-separated list of feature names to check (default: all)')
+  .option('--init', 'Create a starter fixture file in the current directory')
+  .option('--json', 'Output as JSON')
+  .action(async (source: string, target: string, opts: { project?: string; fixtures?: string; features?: string; init?: boolean; json?: boolean }) => {
+    await evalCommand(source, target, opts);
   });
 
 // ─── guard ────────────────────────────────────────────────────────────────────

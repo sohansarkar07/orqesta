@@ -145,10 +145,26 @@ export async function inspectCommand(
     }
   } catch (err) {
     spinner.fail('Inspect failed');
-    if (err instanceof Error) {
-      printError(err.message);
+    const message = err instanceof Error ? err.message : String(err);
+
+    // Provide specific guidance for the audit API 500 — common on free-tier Flagsmith Cloud
+    if (message.includes('500') || message.includes('FLAGSMITH_500')) {
+      printError(
+        'The Flagsmith audit API returned a server error.\n\n' +
+        '  This typically means:\n' +
+        '  • Your Flagsmith plan does not include audit log access (free tier)\n' +
+        '  • The audit endpoint is not available on this self-hosted version\n\n' +
+        '  Flagsmith audit logs require a Scale-Up or Enterprise plan on Cloud.\n' +
+        '  See: https://docs.flagsmith.com/advanced-use/audit-trail\n',
+      );
+    } else if (message.includes('401') || message.includes('403')) {
+      printError(
+        `Authentication or permission error: ${message}\n\n` +
+        '  Audit log access requires an Organisation API Token with read permissions.\n' +
+        '  Check that your ORQUESTA_API_TOKEN has access to audit logs.',
+      );
     } else {
-      printError(String(err));
+      printError(message);
     }
     process.exit(1);
   }

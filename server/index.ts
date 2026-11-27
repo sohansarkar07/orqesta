@@ -22,6 +22,7 @@ import { syncRouter } from './routes/sync.js';
 import { forensicsRouter } from './routes/forensics.js';
 import { policyRouter } from './routes/policy.js';
 import { audienceRouter } from './routes/audience.js';
+import { evalRouter } from './routes/eval.js';
 import { handleError } from './middleware/errors.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -59,6 +60,7 @@ app.use('/api/sync',        syncRouter);
 app.use('/api/forensics',   forensicsRouter);
 app.use('/api/policy',      policyRouter);
 app.use('/api/audience',    audienceRouter);
+app.use('/api/audience/eval', evalRouter);
 
 // ─── Static Files (Production) ────────────────────────────────────────────────
 

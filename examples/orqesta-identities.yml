@@ -1,0 +1,22 @@
+version: 1
+
+identities:
+  - identifier: user_standard
+    description: Standard user with no special traits
+    traits: []
+
+  - identifier: user_premium
+    description: Premium plan user in India
+    traits:
+      - key: plan
+        value: premium
+      - key: country
+        value: India
+
+  - identifier: user_beta
+    description: Internal beta tester
+    traits:
+      - key: plan
+        value: free
+      - key: beta_tester
+        value: true

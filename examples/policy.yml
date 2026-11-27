@@ -1,12 +1,13 @@
 # Orqesta Policy File — Example Configuration
 # Place this in your repo root as .orqesta-policy.yml
+# Run: orqesta lint Production --policy ./examples/policy.yml
 
 version: 1
 
 policies:
   # ─── Naming Convention ────────────────────────────────────────────────────────
   - id: naming-convention
-    description: Flag names must be snake_case (lowercase with underscores)
+    description: Flag names must be snake_case (lowercase with underscores only)
     severity: warning
     rule: naming_convention
     pattern: "^[a-z][a-z0-9_]*$"
@@ -28,32 +29,21 @@ policies:
 
   # ─── No Archived Flags Enabled ────────────────────────────────────────────────
   - id: no-archived-enabled
-    description: Archived flags must not be enabled (clean up old flags)
+    description: Archived flags must not be enabled in any environment
     severity: error
     rule: no_archived_flags_enabled
 
   # ─── Multivariate Allocation ──────────────────────────────────────────────────
   - id: valid-multivariate
-    description: Multivariate allocations must sum to 100%
+    description: Multivariate allocations must sum to exactly 100%
     severity: error
-    rule: validate_multivariate_allocations
+    rule: multivariate_allocations_sum
 
   # ─── Cross-Environment Parity ─────────────────────────────────────────────────
   - id: staging-prod-parity
-    description: Staging and Production must have the same set of flags
+    description: Features enabled in Development must also be enabled in Production
     severity: warning
-    rule: cross_environment_parity
+    rule: environment_parity
+    parity_source: Development
     environments:
-      - Staging
       - Production
-
-# ─── Usage ────────────────────────────────────────────────────────────────────
-# CLI:
-#   orqesta lint Production --policy ./examples/policy.yml
-#
-# Web UI:
-#   Policy page → check "Use custom policy" → paste this YAML
-#
-# CI/CD:
-#   npm run cli -- lint Production --policy ./.orqesta-policy.yml
-#   # Exits with code 1 if any errors found (fails the build)

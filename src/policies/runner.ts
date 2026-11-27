@@ -53,15 +53,21 @@ export class PolicyRunner {
       projectFeatures.map((f) => [f.id, f]),
     );
 
-    // Build the context — skip states where feature is a bare ID (no name)
+    // Build the context — resolve numeric feature IDs using the features list
     const policyFeatureStates: PolicyFeatureState[] = featureStates.flatMap((fs) => {
-      if (typeof fs.feature === 'number') return [];
-      const feat = fs.feature;
-      const projectFeature = featureMap.get(feat.id);
+      // feature may be a bare number (management API) or an object (some versions)
+      const featureId = typeof fs.feature === 'number' ? fs.feature : fs.feature.id;
+      const featureName = typeof fs.feature === 'number' ? undefined : fs.feature.name;
+
+      const projectFeature = featureMap.get(featureId);
+      // Resolve name: prefer inline name, fall back to features list
+      const resolvedName = featureName ?? projectFeature?.name;
+      if (!resolvedName) return []; // cannot identify this feature — skip
+
       return [{
         featureStateId: fs.id,
-        featureId: feat.id,
-        name: feat.name,
+        featureId,
+        name: resolvedName,
         enabled: fs.enabled,
         value: fs.feature_state_value,
         description: projectFeature?.description ?? '',

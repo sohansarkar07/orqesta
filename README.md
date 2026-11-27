@@ -147,6 +147,37 @@ orqesta guard Staging Production
 # warning:  shift 1–9pp
 ```
 
+### 6. Identity Evaluation
+
+Evaluates synthetic user identities against two environments via the Flagsmith Flags API and classifies any differences in evaluation results.
+
+```bash
+# Create a fixture file
+orqesta eval Development Production --init
+
+# Edit orqesta-identities.yml, then run:
+orqesta eval Development Production
+
+# Output per identity:
+#   [ENABLEMENT_REGRESSION] dark_mode — user loses access
+#   [VALUE_CHANGE]          api_rate_limit — value changed
+```
+
+Fixture file format (`orqesta-identities.yml`):
+
+```yaml
+version: 1
+identities:
+  - identifier: user_standard
+    traits: []
+  - identifier: user_premium
+    traits:
+      - key: plan
+        value: premium
+```
+
+Supported regression types: `ENABLEMENT_REGRESSION`, `ENABLEMENT_CHANGE`, `VARIANT_CHANGE`, `VALUE_CHANGE`, `MISSING_FEATURE`, `EVALUATION_ERROR`.
+
 ---
 
 ## CLI Reference
@@ -162,8 +193,9 @@ orqesta inspect <feature> [--with-changes]    # audit history
 orqesta history <feature>                     # full change history
 orqesta lint <environment> [--policy <path>]  # policy checks
 orqesta guard <source> <target>               # audience regression
+orqesta eval <source> <target>              # identity-level evaluation
+orqesta eval <source> <target> --init      # create starter fixture file
 orqesta report <source> <target>              # export report
-orqesta config show                           # view config
 orqesta config set-key <token>                # store token
 orqesta config set-url <url>                  # set API URL
 orqesta config set-project <id>               # set default project
@@ -313,7 +345,44 @@ The `docker-compose.yml` runs:
 
 ---
 
-## Tests
+## MCP Server
+
+Orqesta ships an MCP (Model Context Protocol) server that exposes its core tools to AI clients (Claude Desktop, Cursor, Kiro, VS Code with Continue, etc.).
+
+### Configuration
+
+Add to your MCP client config:
+
+```json
+{
+  "mcpServers": {
+    "orqesta": {
+      "command": "node",
+      "args": ["/path/to/orqesta/dist/src/mcp/server.js"],
+      "env": {
+        "ORQUESTA_API_TOKEN": "your_flagsmith_org_token",
+        "ORQUESTA_API_URL": "https://api.flagsmith.com/api/v1"
+      }
+    }
+  }
+}
+```
+
+For self-hosted Flagsmith, set `ORQUESTA_API_URL` and `ORQUESTA_FLAGS_API_URL` to your instance URLs.
+
+### Available tools
+
+| Tool | Description |
+|---|---|
+| `get_environments` | List all projects and environments |
+| `compare_environments` | Detect drift between two environments |
+| `run_policy_check` | Run policy rules against an environment |
+| `run_audience_guard` | Compare MV allocation shifts |
+| `eval_identities` | Identity-level evaluation across two environments |
+
+All tools use the same core logic as the CLI — no duplicate business logic.
+
+---
 
 ```bash
 npm test         # 106 tests across 9 test files
