@@ -256,6 +256,7 @@ export default function Policy() {
           </div>
 
           {/* Progress bar */}
+          {(result.passed + result.violations.length) > 0 && (
           <Panel style={{ padding: '16px 20px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--ink-400)', marginBottom: '8px' }}>
               <span>Policy compliance</span>
@@ -271,6 +272,18 @@ export default function Policy() {
               }} />
             </div>
           </Panel>
+          )}
+
+          {result.passed === 0 && result.violations.length === 0 && (
+            <Panel style={{ padding: '24px', textAlign: 'center', background: 'var(--ivory)' }}>
+              <p style={{ fontSize: '14px', color: 'var(--ink-400)' }}>
+                No features found in this environment to check against.
+              </p>
+              <p style={{ fontSize: '12px', color: 'var(--ink-300)', marginTop: '6px' }}>
+                Create feature flags in Flagsmith first, then run a policy check.
+              </p>
+            </Panel>
+          )}
 
           {/* Violations by severity */}
           {(['error', 'warning', 'info'] as const).map((sev) => {

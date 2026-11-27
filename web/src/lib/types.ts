@@ -41,11 +41,19 @@ export interface SyncPlan {
   checksum: string;
 }
 
+export interface SyncOperationResult {
+  operation: SyncOperation;
+  status: 'applied' | 'skipped' | 'failed' | 'stale';
+  error?: string;
+  staleReason?: string;
+}
+
 export interface SyncResult {
-  success: boolean;
-  applied: number;
-  failed: number;
-  errors?: Array<{ operation: string; message: string }>;
+  appliedAt: string;
+  verificationPassed: boolean;
+  hasStaleness: boolean;
+  staleOperations?: Array<{ operationId: string; feature: string; reason: string }>;
+  results: SyncOperationResult[];
   plan: SyncPlan;
 }
 

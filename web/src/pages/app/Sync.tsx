@@ -358,44 +358,68 @@ export default function Sync() {
       )}
 
       {/* Done */}
-      {step === 'done' && result && (
-        <>
-          <Panel style={{ padding: '48px', textAlign: 'center' }}>
-            <div style={{ fontSize: '40px', marginBottom: '16px', color: result.success ? 'var(--status-ok)' : 'var(--status-error)' }}>
-              {result.success ? '✓' : '✗'}
-            </div>
-            <h2 style={{ fontSize: '20px', fontWeight: 500, color: result.success ? 'var(--status-ok)' : 'var(--status-error)' }}>
-              {dryRun ? 'Dry-run complete — no changes made' : result.success ? 'Synchronisation complete' : 'Sync failed'}
-            </h2>
-            <p style={{ fontSize: '13px', color: 'var(--ink-400)', marginTop: '8px' }}>
-              {dryRun
-                ? `All ${result.applied} operation${result.applied !== 1 ? 's' : ''} previewed successfully.`
-                : result.success
-                  ? `${result.applied} operation${result.applied !== 1 ? 's' : ''} applied. Verification passed.`
-                  : `${result.failed} operation${result.failed !== 1 ? 's' : ''} failed.`}
-            </p>
-          </Panel>
+      {step === 'done' && result && (() => {
+        const applied = result.results.filter((r) => r.status === 'applied').length;
+        const skipped = result.results.filter((r) => r.status === 'skipped').length;
+        const failed  = result.results.filter((r) => r.status === 'failed').length;
+        const stale   = result.results.filter((r) => r.status === 'stale').length;
+        const hasErrors = failed > 0;
 
-          {result.errors && result.errors.length > 0 && (
-            <Panel style={{ padding: '20px 24px' }}>
-              <h3 style={{ fontSize: '14px', fontWeight: 500, marginBottom: '12px', color: 'var(--status-error)' }}>Errors</h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                {result.errors.map((err, i) => (
-                  <div key={i} style={{ fontSize: '12px', color: 'var(--ink-500)', fontFamily: '"SF Mono", monospace', background: 'var(--status-err-bg)', padding: '8px 12px', borderRadius: 'var(--radius-sm)' }}>
-                    {err.operation}: {err.message}
-                  </div>
-                ))}
+        return (
+          <>
+            <Panel style={{ padding: '48px', textAlign: 'center' }}>
+              <div style={{ fontSize: '40px', marginBottom: '16px', color: hasErrors ? 'var(--status-error)' : 'var(--status-ok)' }}>
+                {hasErrors ? '✗' : '✓'}
               </div>
+              <h2 style={{ fontSize: '20px', fontWeight: 500, color: hasErrors ? 'var(--status-error)' : 'var(--status-ok)' }}>
+                {dryRun ? 'Dry-run complete — no changes made' : hasErrors ? 'Some operations failed' : 'Synchronisation complete'}
+              </h2>
+              <p style={{ fontSize: '13px', color: 'var(--ink-400)', marginTop: '8px' }}>
+                {dryRun
+                  ? `${skipped} operation${skipped !== 1 ? 's' : ''} previewed.`
+                  : [
+                      applied > 0 && `${applied} applied`,
+                      failed  > 0 && `${failed} failed`,
+                      stale   > 0 && `${stale} skipped (stale)`,
+                    ].filter(Boolean).join(' · ')
+                }
+                {!dryRun && result.verificationPassed && (
+                  <span style={{ color: 'var(--status-ok)', marginLeft: '8px' }}>· Post-apply verification passed ✓</span>
+                )}
+              </p>
             </Panel>
-          )}
 
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
-            <Button variant="secondary" size="sm" onClick={resetFlow}>
-              Create another plan
-            </Button>
-          </div>
-        </>
-      )}
+            {/* Per-operation results */}
+            {result.results.some((r) => r.status === 'failed' || r.status === 'stale') && (
+              <Panel style={{ padding: '20px 24px' }}>
+                <h3 style={{ fontSize: '14px', fontWeight: 500, marginBottom: '12px', color: 'var(--ink-700)' }}>Operation details</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                  {result.results.filter((r) => r.status !== 'applied' && r.status !== 'skipped').map((r, i) => (
+                    <div key={i} style={{
+                      fontSize: '12px', background: r.status === 'failed' ? 'var(--status-err-bg)' : 'var(--status-warn-bg)',
+                      padding: '8px 12px', borderRadius: 'var(--radius-sm)',
+                      display: 'flex', gap: '10px', alignItems: 'center',
+                    }}>
+                      <span style={{ fontWeight: 600, color: r.status === 'failed' ? 'var(--status-error)' : 'var(--status-warn)' }}>
+                        {r.status.toUpperCase()}
+                      </span>
+                      <span style={{ fontFamily: '"SF Mono", monospace', color: 'var(--ink-700)' }}>{r.operation.feature}</span>
+                      {r.error && <span style={{ color: 'var(--ink-500)' }}>— {r.error}</span>}
+                      {r.staleReason && <span style={{ color: 'var(--ink-500)' }}>— {r.staleReason}</span>}
+                    </div>
+                  ))}
+                </div>
+              </Panel>
+            )}
+
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+              <Button variant="secondary" size="sm" onClick={resetFlow}>
+                Create another plan
+              </Button>
+            </div>
+          </>
+        );
+      })()}
     </div>
   );
 }

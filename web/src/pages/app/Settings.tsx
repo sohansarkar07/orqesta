@@ -171,12 +171,14 @@ export default function Settings() {
         </form>
       </Panel>
 
-      {/* Help */}
       <Panel style={{ padding: '16px 20px', background: 'var(--ivory)' }}>
         <p style={{ fontSize: '12px', color: 'var(--ink-500)', lineHeight: 1.5 }}>
-          <strong style={{ color: 'var(--ink-700)' }}>Note:</strong> The API token is stored server-side in memory.
-          It will be cleared when the Orqesta server restarts. For persistent storage, set the{' '}
-          <code style={{ background: 'var(--ivory-mid)', padding: '2px 4px', borderRadius: '3px', fontFamily: '"SF Mono", monospace' }}>FLAGSMITH_API_KEY</code> environment variable.
+          <strong style={{ color: 'var(--ink-700)' }}>Note:</strong> The API token is stored server-side in memory and cleared on restart.
+          For persistence, set the{' '}
+          <code style={{ background: 'var(--ivory-mid)', padding: '2px 4px', borderRadius: '3px', fontFamily: '"SF Mono", monospace' }}>ORQUESTA_API_TOKEN</code>{' '}
+          environment variable before starting the server. The legacy{' '}
+          <code style={{ background: 'var(--ivory-mid)', padding: '2px 4px', borderRadius: '3px', fontFamily: '"SF Mono", monospace' }}>FLAGSMITH_API_KEY</code>{' '}
+          variable is also supported.
         </p>
       </Panel>
     </div>

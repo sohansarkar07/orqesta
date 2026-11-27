@@ -312,10 +312,28 @@ export default function Forensics() {
       )}
 
       {auditLog.status === 'error' && (
-        <Panel style={{ padding: '48px', textAlign: 'center', background: 'var(--status-err-bg)', border: '1px solid #D9BCBC' }}>
-          <div style={{ fontSize: '32px', marginBottom: '12px', color: 'var(--status-error)' }}>✗</div>
-          <p style={{ fontSize: '16px', fontWeight: 500, color: 'var(--status-error)', marginBottom: '8px' }}>Query failed</p>
-          <p style={{ fontSize: '13px', color: 'var(--ink-500)' }}>{auditLog.error}</p>
+        <Panel style={{ padding: '32px', textAlign: 'center' }}>
+          {auditLog.error.includes('500') || auditLog.error.includes('FLAGSMITH_500') ? (
+            <>
+              <div style={{ fontSize: '28px', marginBottom: '12px' }}>⚠</div>
+              <p style={{ fontSize: '15px', fontWeight: 500, color: 'var(--status-warn)', marginBottom: '8px' }}>
+                Audit log not available
+              </p>
+              <p style={{ fontSize: '13px', color: 'var(--ink-500)', maxWidth: '420px', margin: '0 auto 12px', lineHeight: 1.6 }}>
+                The Flagsmith audit API returned a server error. This feature requires a paid Flagsmith plan.
+                Use the CLI to inspect individual flags instead:
+              </p>
+              <code style={{ fontSize: '12px', background: 'var(--ivory-mid)', padding: '8px 14px', borderRadius: '6px', display: 'inline-block', fontFamily: '"SF Mono", monospace', color: 'var(--ink-700)' }}>
+                orqesta inspect &lt;feature-name&gt; --with-changes
+              </code>
+            </>
+          ) : (
+            <>
+              <div style={{ fontSize: '28px', marginBottom: '12px', color: 'var(--status-error)' }}>✗</div>
+              <p style={{ fontSize: '15px', fontWeight: 500, color: 'var(--status-error)', marginBottom: '8px' }}>Query failed</p>
+              <p style={{ fontSize: '13px', color: 'var(--ink-500)' }}>{auditLog.error}</p>
+            </>
+          )}
         </Panel>
       )}
 
