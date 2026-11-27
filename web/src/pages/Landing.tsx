@@ -106,7 +106,7 @@ function Hero() {
         </div>
 
         {/* CTA row */}
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '8px' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '8px', flexWrap: 'wrap' }}>
           <Link to="/app">
             <Button variant="primary" size="lg" style={{ fontSize: '15px', padding: '14px 32px' }}>
               Launch Dashboard
@@ -128,7 +128,7 @@ function Hero() {
 
         {/* Meta tags */}
         <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
-          {['Open Source', 'Self-Hosted Ready', '95 Tests'].map((tag) => (
+          {['Open Source', 'Self-Hosted Ready', '112 Tests'].map((tag) => (
             <span key={tag} style={{
               fontSize: '11px',
               fontWeight: 500,
