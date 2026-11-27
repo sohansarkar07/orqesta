@@ -150,7 +150,7 @@ function Hero() {
       <div
         className="hero-right"
         style={{
-          background: 'linear-gradient(135deg, #E8E4DC 0%, #D6D2CA 100%)',
+          background: 'linear-gradient(135deg, #2D5F3F 0%, #1A3D2A 100%)',
           position: 'relative',
           overflow: 'hidden',
           borderLeft: 'var(--border)',
@@ -163,7 +163,7 @@ function Hero() {
         <div style={{
           position: 'absolute',
           inset: 0,
-          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.03) 1px, transparent 1px)',
+          backgroundImage: 'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 1px)',
           backgroundSize: '24px 24px',
           pointerEvents: 'none',
         }} />
@@ -175,7 +175,7 @@ function Hero() {
           maxWidth: '500px',
           borderRadius: '12px',
           overflow: 'hidden',
-          boxShadow: '0 20px 60px rgba(26,25,22,0.18), 0 4px 12px rgba(26,25,22,0.1)',
+          boxShadow: '0 20px 60px rgba(0,0,0,0.35), 0 4px 12px rgba(0,0,0,0.2)',
         }}>
           <video
             src="/orqesta-demo.mp4"
@@ -189,6 +189,16 @@ function Hero() {
               display: 'block',
             }}
           />
+          {/* Cover Gemini watermark bottom-right */}
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            width: '18%',
+            height: '14%',
+            background: '#0d1a10',
+            pointerEvents: 'none',
+          }} />
         </div>
       </div>
     </section>
@@ -275,6 +285,16 @@ function Features() {
             command="orqesta lint Production --policy ./orqesta-policy.yml"
             accent="var(--forest)"
           />
+          {/* Cover Gemini watermark bottom-right */}
+          <div style={{
+            position: 'absolute',
+            bottom: 0,
+            right: 0,
+            width: '18%',
+            height: '14%',
+            background: '#0d1a10',
+            pointerEvents: 'none',
+          }} />
         </div>
       </div>
     </section>
