@@ -139,14 +139,7 @@ img { display: block; max-width: 100%; }
   }
 }
 
-/* Footer */
-@media (max-width: 600px) {
-  .footer-inner {
-    flex-direction: column !important;
-    gap: 16px !important;
-    align-items: flex-start !important;
-  }
-}
+/* Footer responsive handled by .footer-grid */
 
 /* Dashboard sidebar — hidden on mobile, slide-in drawer */
 @media (max-width: 768px) {
@@ -181,12 +174,23 @@ img { display: block; max-width: 100%; }
   .mobile-topbar-spacer { height: 48px !important; }
 }
 
+/* Footer grid */
+@media (max-width: 900px) {
+  .footer-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 32px !important;
+  }
+}
+@media (max-width: 540px) {
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
 @media (min-width: 769px) {
   .mobile-topbar { display: none !important; }
   .sidebar-overlay { display: none !important; }
 }
-
-/* ─── Docs page ───────────────────────────────────────────────────────────── */
 @media (max-width: 900px) {
   .docs-layout {
     flex-direction: column !important;

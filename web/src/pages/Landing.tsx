@@ -701,32 +701,146 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 }
 
 /* ─── Footer ──────────────────────────────────────────────────────────────── */
+function XIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.828Z"/>
+    </svg>
+  );
+}
+
 function Footer() {
+  const cols = [
+    {
+      heading: 'Product',
+      links: [
+        { label: 'Dashboard', href: '/app' },
+        { label: 'CLI Reference', href: '/cli' },
+        { label: 'MCP Bundle', href: '/mcp' },
+        { label: 'Documentation', href: '/docs' },
+        { label: 'FAQ', href: '/#faq' },
+      ],
+    },
+    {
+      heading: 'Features',
+      links: [
+        { label: 'Environment Compare', href: '/#features' },
+        { label: 'Selective Sync', href: '/#features' },
+        { label: 'Configuration Forensics', href: '/#features' },
+        { label: 'Policy Linting', href: '/#features' },
+      ],
+    },
+    {
+      heading: 'Resources',
+      links: [
+        { label: 'GitHub Repository', href: 'https://github.com/sohansarkar07/orqesta', external: true },
+        { label: 'MIT License', href: 'https://github.com/sohansarkar07/orqesta/blob/main/LICENSE', external: true },
+        { label: 'Report Issue', href: 'https://github.com/sohansarkar07/orqesta/issues', external: true },
+        { label: 'Flagsmith Docs', href: 'https://docs.flagsmith.com', external: true },
+      ],
+    },
+  ];
+
   return (
     <footer style={{
-      borderTop: 'var(--border)',
-      padding: '40px 0',
       background: 'var(--ivory-mid)',
+      borderTop: 'var(--border)',
+      padding: '64px 0 32px',
     }}>
-      <div className="container" style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-      }} >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <span style={{ fontFamily: 'var(--font-serif)', fontSize: '16px', color: 'var(--ink-900)' }}>Orqesta</span>
-          <span style={{ color: 'var(--ink-300)', fontSize: '12px' }}>v0.1.0</span>
-        </div>
-        <div className="footer-inner" style={{ display: 'flex', gap: '24px' }}>
-          {[
-            { label: 'GitHub', href: 'https://github.com/sohansarkar07/orqesta' },
-            { label: 'MIT License', href: 'https://github.com/sohansarkar07/orqesta/blob/main/LICENSE' },
-          ].map((link) => (
-            <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"
-              style={{ fontSize: '13px', color: 'var(--ink-400)', transition: 'color 0.15s' }}>
-              {link.label}
-            </a>
+      <div className="container">
+        {/* Top row: brand + columns */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr 1fr 1fr',
+          gap: '48px',
+          marginBottom: '48px',
+        }} className="footer-grid">
+
+          {/* Brand */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <img src="/orqesta-logo.jpg" alt="Orqesta" style={{ height: '32px', width: 'auto', borderRadius: '4px' }} />
+            </div>
+            <p style={{ fontSize: '13px', color: 'var(--ink-500)', lineHeight: 1.65, maxWidth: '220px' }}>
+              Configuration safety for Flagsmith. Detect drift, sync safely, enforce policy.
+            </p>
+            {/* Social icons */}
+            <div style={{ display: 'flex', gap: '12px', marginTop: '4px' }}>
+              <a
+                href="https://x.com/orqesta_flag"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: '32px', height: '32px',
+                  border: 'var(--border)', borderRadius: '6px',
+                  color: 'var(--ink-500)', background: 'var(--white)',
+                  transition: 'all 0.15s',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--ink-900)'; e.currentTarget.style.color = 'var(--ink-900)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = ''; e.currentTarget.style.color = 'var(--ink-500)'; }}
+                aria-label="X (Twitter)"
+              >
+                <XIcon />
+              </a>
+              <a
+                href="https://github.com/sohansarkar07/orqesta"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  width: '32px', height: '32px',
+                  border: 'var(--border)', borderRadius: '6px',
+                  color: 'var(--ink-500)', background: 'var(--white)',
+                  transition: 'all 0.15s',
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--ink-900)'; e.currentTarget.style.color = 'var(--ink-900)'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = ''; e.currentTarget.style.color = 'var(--ink-500)'; }}
+                aria-label="GitHub"
+              >
+                <GitHubIcon />
+              </a>
+            </div>
+          </div>
+
+          {/* Link columns */}
+          {cols.map((col) => (
+            <div key={col.heading} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <p style={{
+                fontSize: '11px', fontWeight: 600, letterSpacing: '0.08em',
+                textTransform: 'uppercase', color: 'var(--ink-300)', margin: 0,
+              }}>
+                {col.heading}
+              </p>
+              {col.links.map((link) => (
+                <a key={link.label}
+                  href={link.href}
+                  {...('external' in link && link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                  style={{ fontSize: '14px', color: 'var(--ink-500)', textDecoration: 'none', transition: 'color 0.15s' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.color = 'var(--ink-900)'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--ink-500)'; }}
+                >{link.label}</a>
+              ))}
+            </div>
           ))}
+        </div>
+
+        {/* Bottom bar */}
+        <div style={{
+          borderTop: 'var(--border-light)',
+          paddingTop: '24px',
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '8px',
+        }}>
+          <span style={{ fontSize: '13px', color: 'var(--ink-400)' }}>
+            © 2026 Orqesta. Open source under MIT.
+          </span>
+          <span style={{ fontSize: '13px', color: 'var(--ink-300)' }}>
+            Built for the Toggle Wars Hackathon
+          </span>
         </div>
       </div>
     </footer>
