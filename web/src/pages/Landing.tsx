@@ -75,6 +75,7 @@ function Hero() {
           justifyContent: 'center',
           padding: '80px 72px 80px 96px',
           gap: '28px',
+          background: 'var(--ivory)',
         }}
       >
         {/* Heading */}
@@ -116,6 +117,12 @@ function Hero() {
             <Button variant="secondary" size="lg" style={{ fontSize: '15px', padding: '14px 24px', gap: '10px' }}>
               <GitHubIcon />
               GitHub
+            </Button>
+          </a>
+          <a href="https://x.com/orqesta_flag" target="_blank" rel="noopener noreferrer">
+            <Button variant="secondary" size="lg" style={{ fontSize: '15px', padding: '14px 20px', gap: '10px' }}>
+              <XIcon />
+              Follow
             </Button>
           </a>
         </div>
