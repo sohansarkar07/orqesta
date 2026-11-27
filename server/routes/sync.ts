@@ -14,8 +14,8 @@ import { requireClient } from '../credentials.js';
 import { DriftComparator } from '../../src/drift/comparator.js';
 import { SyncPlanner } from '../../src/sync/planner.js';
 import { SyncExecutor } from '../../src/sync/executor.js';
+import { buildEnvDoc } from '../../src/utils/envDocBuilder.js';
 import { wrap } from '../middleware/errors.js';
-import type { FlagsmithEnvironmentDocument } from '../../src/types/flagsmith.js';
 import type { SyncPlan } from '../../src/types/sync.js';
 
 export const syncRouter = Router();
@@ -89,33 +89,23 @@ syncRouter.post(
       return;
     }
 
-    const [sourceStates, targetStates] = await Promise.all([
+    const [features, sourceStates, targetStates] = await Promise.all([
+      client.getFeatures(projectId),
       client.getFeatureStates(sourceEnv.api_key),
       client.getFeatureStates(targetEnv.api_key),
     ]);
 
-    const toDoc = (states: typeof sourceStates, apiKey: string, envId: number): FlagsmithEnvironmentDocument => ({
-      id: envId,
-      api_key: apiKey,
-      project: { id: projectId, name: '', organisation: 0, hide_disabled_flags: false, segments: [] },
-      feature_states: states.map((s) => ({
-        id: s.id, feature: s.feature, enabled: s.enabled,
-        value: s.feature_state_value,
-        multivariate_feature_state_values: s.multivariate_feature_state_values,
-      })),
-    });
+    const sourceDoc = buildEnvDoc(sourceEnv.id, sourceEnv.api_key, projectId, sourceStates, features);
+    const targetDoc = buildEnvDoc(targetEnv.id, targetEnv.api_key, projectId, targetStates, features);
 
-    const drift = DriftComparator.compare(
-      toDoc(sourceStates, sourceEnv.api_key, sourceEnv.id), sourceEnv.name,
-      toDoc(targetStates, targetEnv.api_key, targetEnv.id), targetEnv.name,
-    );
+    const drift = DriftComparator.compare(sourceDoc, sourceEnv.name, targetDoc, targetEnv.name);
 
     if (drift.drifts.length === 0) {
       res.json({ noDrift: true, message: 'Environments are already in sync.' });
       return;
     }
 
-    const plan = SyncPlanner.buildPlan(drift, targetStates);
+    const plan = SyncPlanner.buildPlan(drift, targetDoc.feature_states as any);
 
     // Store server-side
     cleanExpiredPlans();

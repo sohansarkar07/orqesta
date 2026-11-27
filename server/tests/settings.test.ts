@@ -9,9 +9,7 @@ import { app } from '../index.js';
 import * as creds from '../credentials.js';
 
 const DEFAULT_URL = 'https://api.flagsmith.com/api/v1';
-const FLAGS_URL   = 'https://edge.api.flagsmith.com/api/v1';
 
-// ping() now returns { management, flags } — not { ok, organisations }
 vi.mock('../../src/flagsmith/client.js', () => ({
   FlagsmithClient: vi.fn().mockImplementation(() => ({
     ping: vi.fn().mockResolvedValue({
@@ -53,7 +51,6 @@ describe('POST /api/settings/connect', () => {
     expect(res.body.connected).toBe(true);
     expect(res.body.maskedKey).toBe('tok.…1234');
     expect(res.body.organisations).toHaveLength(1);
-    // Secret must NOT appear in response
     expect(JSON.stringify(res.body)).not.toContain('tok.testkey1234');
   });
 
@@ -68,7 +65,17 @@ describe('GET /api/settings/status', () => {
   beforeEach(() => { creds.clearCredentials(); });
 
   it('returns connected: false when no credentials set', async () => {
+    // Ensure env vars don't interfere
+    const saved = process.env.ORQUESTA_API_TOKEN;
+    delete process.env.ORQUESTA_API_TOKEN;
+    const savedLegacy = process.env.FLAGSMITH_API_KEY;
+    delete process.env.FLAGSMITH_API_KEY;
+
     const res = await request(app).get('/api/settings/status');
+
+    if (saved !== undefined) process.env.ORQUESTA_API_TOKEN = saved;
+    if (savedLegacy !== undefined) process.env.FLAGSMITH_API_KEY = savedLegacy;
+
     expect(res.status).toBe(200);
     expect(res.body.connected).toBe(false);
   });
@@ -90,6 +97,13 @@ describe('POST /api/settings/disconnect', () => {
     const res = await request(app).post('/api/settings/disconnect').send({});
     expect(res.status).toBe(200);
     expect(res.body.disconnected).toBe(true);
+    // Temporarily hide env vars so loadFromEnv doesn't refill
+    const savedToken = process.env.ORQUESTA_API_TOKEN;
+    const savedLegacy = process.env.FLAGSMITH_API_KEY;
+    delete process.env.ORQUESTA_API_TOKEN;
+    delete process.env.FLAGSMITH_API_KEY;
     expect(creds.getCredentials()).toBeNull();
+    if (savedToken !== undefined) process.env.ORQUESTA_API_TOKEN = savedToken;
+    if (savedLegacy !== undefined) process.env.FLAGSMITH_API_KEY = savedLegacy;
   });
 });

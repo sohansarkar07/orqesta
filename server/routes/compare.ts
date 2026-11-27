@@ -2,16 +2,14 @@
  * POST /api/compare
  * Body: { projectId: number, sourceEnvName: string, targetEnvName: string }
  * Returns: DriftReport (api_key fields stripped before sending to client)
- *
- * Uses the real DriftComparator — zero fabricated data.
  */
 
 import { Router } from 'express';
 import { z } from 'zod';
 import { requireClient } from '../credentials.js';
 import { DriftComparator } from '../../src/drift/comparator.js';
+import { buildEnvDoc } from '../../src/utils/envDocBuilder.js';
 import { wrap } from '../middleware/errors.js';
-import type { FlagsmithEnvironmentDocument } from '../../src/types/flagsmith.js';
 
 export const compareRouter = Router();
 
@@ -39,12 +37,8 @@ compareRouter.post(
 
     const environments = await client.getEnvironments(projectId);
 
-    const sourceEnv = environments.find(
-      (e) => e.name.toLowerCase() === sourceEnvName.toLowerCase(),
-    );
-    const targetEnv = environments.find(
-      (e) => e.name.toLowerCase() === targetEnvName.toLowerCase(),
-    );
+    const sourceEnv = environments.find((e) => e.name.toLowerCase() === sourceEnvName.toLowerCase());
+    const targetEnv = environments.find((e) => e.name.toLowerCase() === targetEnvName.toLowerCase());
 
     if (!sourceEnv) {
       res.status(404).json({
@@ -63,36 +57,16 @@ compareRouter.post(
       return;
     }
 
-    // Fetch real feature states from Flagsmith
-    const [sourceStates, targetStates] = await Promise.all([
+    const [features, sourceStates, targetStates] = await Promise.all([
+      client.getFeatures(projectId),
       client.getFeatureStates(sourceEnv.api_key),
       client.getFeatureStates(targetEnv.api_key),
     ]);
 
-    // Build minimal environment documents for the comparator
-    const toDoc = (
-      states: typeof sourceStates,
-      apiKey: string,
-      envId: number,
-    ): FlagsmithEnvironmentDocument => ({
-      id: envId,
-      api_key: apiKey,
-      project: { id: projectId, name: '', organisation: 0, hide_disabled_flags: false, segments: [] },
-      feature_states: states.map((s) => ({
-        id: s.id,
-        feature: s.feature,
-        enabled: s.enabled,
-        value: s.feature_state_value,
-        multivariate_feature_state_values: s.multivariate_feature_state_values,
-      })),
-    });
+    const sourceDoc = buildEnvDoc(sourceEnv.id, sourceEnv.api_key, projectId, sourceStates, features);
+    const targetDoc = buildEnvDoc(targetEnv.id, targetEnv.api_key, projectId, targetStates, features);
 
-    const drift = DriftComparator.compare(
-      toDoc(sourceStates, sourceEnv.api_key, sourceEnv.id),
-      sourceEnv.name,
-      toDoc(targetStates, targetEnv.api_key, targetEnv.id),
-      targetEnv.name,
-    );
+    const drift = DriftComparator.compare(sourceDoc, sourceEnv.name, targetDoc, targetEnv.name);
 
     // Strip api_key before sending to browser
     res.json({

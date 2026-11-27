@@ -23,7 +23,12 @@ export class SyncPlanner {
     targetFeatureStates: FlagsmithFeatureState[],
   ): SyncPlan {
     const targetStatesByName = new Map<string, FlagsmithFeatureState>(
-      targetFeatureStates.map((fs) => [fs.feature.name, fs]),
+      targetFeatureStates
+        .filter((fs) => typeof fs.feature !== 'number')
+        .map((fs) => {
+          const feat = fs.feature as { id: number; name: string; type: 'STANDARD' | 'MULTIVARIATE' };
+          return [feat.name, fs];
+        }),
     );
 
     const operations: SyncOperation[] = [];
@@ -98,12 +103,17 @@ export class SyncPlanner {
     const checksum = this.computeChecksum(operations);
 
     // Build a snapshot of the target state at plan-creation time
-    const targetStateSnapshot = targetFeatureStates.map((fs) => ({
-      featureStateId: fs.id,
-      feature: fs.feature.name,
-      enabled: fs.enabled,
-      value: fs.feature_state_value,
-    }));
+    const targetStateSnapshot = targetFeatureStates
+      .filter((fs) => typeof fs.feature !== 'number')
+      .map((fs) => {
+        const feat = fs.feature as { id: number; name: string; type: 'STANDARD' | 'MULTIVARIATE' };
+        return {
+          featureStateId: fs.id,
+          feature: feat.name,
+          enabled: fs.enabled,
+          value: fs.feature_state_value,
+        };
+      });
 
     return {
       source: drift.source,

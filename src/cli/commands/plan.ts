@@ -7,6 +7,7 @@ import ora from 'ora';
 import { createClient, resolveEnvironment, resolveProject } from '../../utils/clientFactory.js';
 import { DriftComparator } from '../../drift/comparator.js';
 import { SyncPlanner } from '../../sync/planner.js';
+import { buildEnvDoc } from '../../utils/envDocBuilder.js';
 import { printSyncPlan, printError } from '../../utils/output.js';
 import chalk from 'chalk';
 import { promises as fs } from 'fs';
@@ -29,9 +30,12 @@ export async function planCommand(
   try {
     const projectId = await resolveProject(client, opts.project);
 
-    spinner.text = `Resolving environments...`;
+    spinner.text = 'Resolving environments...';
     const sourceEnv = await resolveEnvironment(client, source, projectId);
     const targetEnv = await resolveEnvironment(client, target, projectId);
+
+    spinner.text = 'Fetching feature list...';
+    const features = await client.getFeatures(projectId);
 
     spinner.text = `Fetching ${chalk.cyan(sourceEnv.name)} environment...`;
     const sourceStates = await client.getFeatureStates(sourceEnv.apiKey);
@@ -41,38 +45,10 @@ export async function planCommand(
 
     spinner.text = 'Detecting drift...';
 
-    const sourceDoc = {
-      id: sourceEnv.id,
-      api_key: sourceEnv.apiKey,
-      project: { id: projectId, name: '', organisation: 0, hide_disabled_flags: false, segments: [] },
-      feature_states: sourceStates.map((s) => ({
-        id: s.id,
-        feature: s.feature,
-        enabled: s.enabled,
-        value: s.feature_state_value,
-        multivariate_feature_state_values: s.multivariate_feature_state_values,
-      })),
-    };
+    const sourceDoc = buildEnvDoc(sourceEnv.id, sourceEnv.apiKey, projectId, sourceStates, features);
+    const targetDoc = buildEnvDoc(targetEnv.id, targetEnv.apiKey, projectId, targetStates, features);
 
-    const targetDoc = {
-      id: targetEnv.id,
-      api_key: targetEnv.apiKey,
-      project: { id: projectId, name: '', organisation: 0, hide_disabled_flags: false, segments: [] },
-      feature_states: targetStates.map((s) => ({
-        id: s.id,
-        feature: s.feature,
-        enabled: s.enabled,
-        value: s.feature_state_value,
-        multivariate_feature_state_values: s.multivariate_feature_state_values,
-      })),
-    };
-
-    const drift = DriftComparator.compare(
-      sourceDoc,
-      sourceEnv.name,
-      targetDoc,
-      targetEnv.name,
-    );
+    const drift = DriftComparator.compare(sourceDoc, sourceEnv.name, targetDoc, targetEnv.name);
 
     if (drift.drifts.length === 0) {
       spinner.succeed('No drift detected — nothing to synchronise');
@@ -80,11 +56,9 @@ export async function planCommand(
     }
 
     spinner.text = 'Building sync plan...';
-    const plan = SyncPlanner.buildPlan(drift, targetStates);
+    const plan = SyncPlanner.buildPlan(drift, targetDoc.feature_states as any);
 
-    // Cache the plan for the apply command
     await fs.writeFile(PLAN_CACHE_FILE, JSON.stringify(plan, null, 2), 'utf-8');
-
     spinner.succeed(`Plan generated and cached to ${chalk.dim(PLAN_CACHE_FILE)}`);
 
     if (opts.json) {
@@ -96,11 +70,7 @@ export async function planCommand(
     }
   } catch (err) {
     spinner.fail('Plan generation failed');
-    if (err instanceof Error) {
-      printError(err.message);
-    } else {
-      printError(String(err));
-    }
+    printError(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }

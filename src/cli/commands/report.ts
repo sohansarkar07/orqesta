@@ -10,6 +10,7 @@ import os from 'os';
 import { createClient, resolveEnvironment, resolveProject } from '../../utils/clientFactory.js';
 import { DriftComparator } from '../../drift/comparator.js';
 import { SyncPlanner } from '../../sync/planner.js';
+import { buildEnvDoc } from '../../utils/envDocBuilder.js';
 import type { DriftReport } from '../../types/drift.js';
 import type { SyncPlan } from '../../types/sync.js';
 import { printError } from '../../utils/output.js';
@@ -41,38 +42,13 @@ export async function reportCommand(
 
     spinner.text = 'Detecting drift...';
 
-    const sourceDoc = {
-      id: sourceEnv.id,
-      api_key: sourceEnv.apiKey,
-      project: { id: projectId, name: '', organisation: 0, hide_disabled_flags: false, segments: [] },
-      feature_states: sourceStates.map((s) => ({
-        id: s.id,
-        feature: s.feature,
-        enabled: s.enabled,
-        value: s.feature_state_value,
-        multivariate_feature_state_values: s.multivariate_feature_state_values,
-      })),
-    };
+    spinner.text = 'Fetching feature list...';
+    const features = await client.getFeatures(projectId);
 
-    const targetDoc = {
-      id: targetEnv.id,
-      api_key: targetEnv.apiKey,
-      project: { id: projectId, name: '', organisation: 0, hide_disabled_flags: false, segments: [] },
-      feature_states: targetStates.map((s) => ({
-        id: s.id,
-        feature: s.feature,
-        enabled: s.enabled,
-        value: s.feature_state_value,
-        multivariate_feature_state_values: s.multivariate_feature_state_values,
-      })),
-    };
+    const sourceDoc = buildEnvDoc(sourceEnv.id, sourceEnv.apiKey, projectId, sourceStates, features);
+    const targetDoc = buildEnvDoc(targetEnv.id, targetEnv.apiKey, projectId, targetStates, features);
 
-    const drift = DriftComparator.compare(
-      sourceDoc,
-      sourceEnv.name,
-      targetDoc,
-      targetEnv.name,
-    );
+    const drift = DriftComparator.compare(sourceDoc, sourceEnv.name, targetDoc, targetEnv.name);
 
     const plan = SyncPlanner.buildPlan(drift, targetStates);
 

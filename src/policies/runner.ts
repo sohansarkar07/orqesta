@@ -53,13 +53,15 @@ export class PolicyRunner {
       projectFeatures.map((f) => [f.id, f]),
     );
 
-    // Build the context
-    const policyFeatureStates: PolicyFeatureState[] = featureStates.map((fs) => {
-      const projectFeature = featureMap.get(fs.feature.id);
-      return {
+    // Build the context — skip states where feature is a bare ID (no name)
+    const policyFeatureStates: PolicyFeatureState[] = featureStates.flatMap((fs) => {
+      if (typeof fs.feature === 'number') return [];
+      const feat = fs.feature;
+      const projectFeature = featureMap.get(feat.id);
+      return [{
         featureStateId: fs.id,
-        featureId: fs.feature.id,
-        name: fs.feature.name,
+        featureId: feat.id,
+        name: feat.name,
         enabled: fs.enabled,
         value: fs.feature_state_value,
         description: projectFeature?.description ?? '',
@@ -70,7 +72,7 @@ export class PolicyRunner {
             percentage: mv.percentage_allocation,
           }),
         ),
-      };
+      }];
     });
 
     const ctx: PolicyEnvironmentContext = {
@@ -148,10 +150,12 @@ export class PolicyRunner {
           if (sourceEnv) {
             try {
               const sourceFss = await this.client.getFeatureStates(sourceEnv.api_key);
-              sourceStates = sourceFss.map((fs) => ({
-                name: fs.feature.name,
-                enabled: fs.enabled,
-              }));
+              sourceStates = sourceFss
+                .filter((fs) => typeof fs.feature !== 'number')
+                .map((fs) => {
+                  const feat = fs.feature as { id: number; name: string; type: 'STANDARD' | 'MULTIVARIATE' };
+                  return { name: feat.name, enabled: fs.enabled };
+                });
             } catch {
               // Non-fatal: rule will return no violations if source is unavailable
             }
@@ -164,10 +168,12 @@ export class PolicyRunner {
           if (otherEnv) {
             try {
               const sourceFss = await this.client.getFeatureStates(otherEnv.api_key);
-              sourceStates = sourceFss.map((fs) => ({
-                name: fs.feature.name,
-                enabled: fs.enabled,
-              }));
+              sourceStates = sourceFss
+                .filter((fs) => typeof fs.feature !== 'number')
+                .map((fs) => {
+                  const feat = fs.feature as { id: number; name: string; type: 'STANDARD' | 'MULTIVARIATE' };
+                  return { name: feat.name, enabled: fs.enabled };
+                });
             } catch {
               // Non-fatal
             }

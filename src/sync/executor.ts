@@ -8,6 +8,7 @@ import type { FlagsmithClient } from '../flagsmith/client.js';
 import type { FlagsmithEnvironmentDocument } from '../types/flagsmith.js';
 import { DriftComparator } from '../drift/comparator.js';
 import { SyncPlanner } from './planner.js';
+import { buildEnvDoc } from '../utils/envDocBuilder.js';
 
 export class SyncExecutor {
   constructor(private readonly client: FlagsmithClient) {}
@@ -170,7 +171,7 @@ export class SyncExecutor {
 function featureStatesToDocument(
   states: Array<{
     id: number;
-    feature: { id: number; name: string; type: 'STANDARD' | 'MULTIVARIATE' };
+    feature: number | { id: number; name: string; type: 'STANDARD' | 'MULTIVARIATE' };
     enabled: boolean;
     value: string | number | boolean | null;
     multivariate_feature_state_values?: Array<{
@@ -191,12 +192,15 @@ function featureStatesToDocument(
       hide_disabled_flags: false,
       segments: [],
     },
-    feature_states: states.map((s) => ({
-      id: s.id,
-      feature: s.feature,
-      enabled: s.enabled,
-      value: s.value,
-      multivariate_feature_state_values: s.multivariate_feature_state_values,
-    })),
+    feature_states: states.flatMap((s) => {
+      if (typeof s.feature === 'number') return []; // skip — no name available
+      return [{
+        id: s.id,
+        feature: s.feature,
+        enabled: s.enabled,
+        value: s.value,
+        multivariate_feature_state_values: s.multivariate_feature_state_values,
+      }];
+    }),
   };
 }

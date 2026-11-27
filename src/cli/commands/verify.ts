@@ -7,6 +7,7 @@ import chalk from 'chalk';
 import ora from 'ora';
 import { createClient, resolveEnvironment, resolveProject } from '../../utils/clientFactory.js';
 import { DriftComparator } from '../../drift/comparator.js';
+import { buildEnvDoc } from '../../utils/envDocBuilder.js';
 import { printError } from '../../utils/output.js';
 
 export async function verifyCommand(
@@ -26,6 +27,9 @@ export async function verifyCommand(
     const sourceEnv = await resolveEnvironment(client, source, projectId);
     const targetEnv = await resolveEnvironment(client, target, projectId);
 
+    spinner.text = 'Fetching feature list...';
+    const features = await client.getFeatures(projectId);
+
     spinner.text = `Fetching ${chalk.cyan(sourceEnv.name)}...`;
     const sourceStates = await client.getFeatureStates(sourceEnv.apiKey);
 
@@ -34,61 +38,26 @@ export async function verifyCommand(
 
     spinner.text = 'Comparing...';
 
-    const sourceDoc = {
-      id: sourceEnv.id,
-      api_key: sourceEnv.apiKey,
-      project: { id: projectId, name: '', organisation: 0, hide_disabled_flags: false, segments: [] },
-      feature_states: sourceStates.map((s) => ({
-        id: s.id,
-        feature: s.feature,
-        enabled: s.enabled,
-        value: s.feature_state_value,
-        multivariate_feature_state_values: s.multivariate_feature_state_values,
-      })),
-    };
+    const sourceDoc = buildEnvDoc(sourceEnv.id, sourceEnv.apiKey, projectId, sourceStates, features);
+    const targetDoc = buildEnvDoc(targetEnv.id, targetEnv.apiKey, projectId, targetStates, features);
 
-    const targetDoc = {
-      id: targetEnv.id,
-      api_key: targetEnv.apiKey,
-      project: { id: projectId, name: '', organisation: 0, hide_disabled_flags: false, segments: [] },
-      feature_states: targetStates.map((s) => ({
-        id: s.id,
-        feature: s.feature,
-        enabled: s.enabled,
-        value: s.feature_state_value,
-        multivariate_feature_state_values: s.multivariate_feature_state_values,
-      })),
-    };
-
-    const drift = DriftComparator.compare(
-      sourceDoc,
-      sourceEnv.name,
-      targetDoc,
-      targetEnv.name,
-    );
+    const drift = DriftComparator.compare(sourceDoc, sourceEnv.name, targetDoc, targetEnv.name);
 
     if (drift.drifts.length === 0) {
-      spinner.succeed(
-        chalk.green(`✓ Verification passed — ${sourceEnv.name} and ${targetEnv.name} are in sync`),
-      );
+      spinner.succeed(chalk.green(`✓ Verification passed — ${sourceEnv.name} and ${targetEnv.name} are in sync`));
       console.log('');
     } else {
-      spinner.fail(
-        chalk.red(`✗ Verification failed — ${drift.drifts.length} difference(s) remain`),
-      );
+      spinner.fail(chalk.red(`✗ Verification failed — ${drift.drifts.length} difference(s) remain`));
       console.log('');
 
       if (opts.json) {
         console.log(JSON.stringify(drift, null, 2));
       } else {
         for (const d of drift.drifts) {
-          console.log(
-            `  ${chalk.yellow('⚠')}  ${chalk.bold(d.feature)} — ${d.description}`,
-          );
+          console.log(`  ${chalk.yellow('⚠')}  ${chalk.bold(d.feature)} — ${d.description}`);
         }
         console.log('');
       }
-
       process.exit(1);
     }
 
@@ -97,11 +66,7 @@ export async function verifyCommand(
     }
   } catch (err) {
     spinner.fail('Verification failed');
-    if (err instanceof Error) {
-      printError(err.message);
-    } else {
-      printError(String(err));
-    }
+    printError(err instanceof Error ? err.message : String(err));
     process.exit(1);
   }
 }

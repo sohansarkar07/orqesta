@@ -47,7 +47,7 @@ export interface MultivariateFeatureStateValue {
 
 export interface FlagsmithFeatureState {
   id: number;
-  feature: {
+  feature: number | {
     id: number;
     name: string;
     type: 'STANDARD' | 'MULTIVARIATE';
@@ -56,7 +56,6 @@ export interface FlagsmithFeatureState {
   enabled: boolean;
   feature_state_value: string | number | boolean | null;
   multivariate_feature_state_values: MultivariateFeatureStateValue[];
-  // null means environment default; number means identity or segment override
   identity?: number | null;
   feature_segment?: number | null;
 }
