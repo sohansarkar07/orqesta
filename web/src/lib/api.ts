@@ -170,6 +170,16 @@ class ApiClient {
   async policyDefault() {
     return this.request<{ yaml: string }>('GET', '/policy/default');
   }
+
+  // ─── Audience Guard ──────────────────────────────────────────────────────────
+
+  async audienceCheck(projectId: number, sourceEnvName: string, targetEnvName: string) {
+    return this.request<import('./types.js').AudienceGuardReport>('POST', '/audience/check', {
+      projectId,
+      sourceEnvName,
+      targetEnvName,
+    });
+  }
 }
 
 export const api = new ApiClient();

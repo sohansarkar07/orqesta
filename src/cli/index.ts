@@ -15,6 +15,7 @@ import { historyCommand } from './commands/history.js';
 import { verifyCommand } from './commands/verify.js';
 import { reportCommand } from './commands/report.js';
 import { lintCommand } from './commands/lint.js';
+import { guardCommand } from './commands/guard.js';
 import {
   configShowCommand,
   configSetKeyCommand,
@@ -131,6 +132,16 @@ program
   .option('-o, --output <file>', 'Output file path')
   .action(async (source: string, target: string, opts: { project?: string; format?: 'markdown' | 'json'; output?: string }) => {
     await reportCommand(source, target, opts);
+  });
+
+// ─── guard ────────────────────────────────────────────────────────────────────
+program
+  .command('guard <source> <target>')
+  .description('Audience Regression Guard — detect multivariate allocation shifts between environments')
+  .option('-p, --project <name-or-id>', 'Project name or ID')
+  .option('--json', 'Output as JSON')
+  .action(async (source: string, target: string, opts: { project?: string; json?: boolean }) => {
+    await guardCommand(source, target, opts);
   });
 
 // ─── lint ─────────────────────────────────────────────────────────────────────

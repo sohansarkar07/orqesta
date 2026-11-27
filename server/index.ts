@@ -21,6 +21,7 @@ import { compareRouter } from './routes/compare.js';
 import { syncRouter } from './routes/sync.js';
 import { forensicsRouter } from './routes/forensics.js';
 import { policyRouter } from './routes/policy.js';
+import { audienceRouter } from './routes/audience.js';
 import { handleError } from './middleware/errors.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -57,6 +58,7 @@ app.use('/api/compare',     compareRouter);
 app.use('/api/sync',        syncRouter);
 app.use('/api/forensics',   forensicsRouter);
 app.use('/api/policy',      policyRouter);
+app.use('/api/audience',    audienceRouter);
 
 // ─── Static Files (Production) ────────────────────────────────────────────────
 

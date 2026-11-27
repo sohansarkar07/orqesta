@@ -91,3 +91,34 @@ export interface Environment {
   name: string;
   api_key: string;
 }
+
+// ─── Audience Guard ───────────────────────────────────────────────────────────
+
+export type RegressionSeverity = 'critical' | 'warning' | 'info';
+
+export interface VariantShift {
+  optionId: number;
+  label: string;
+  before: number;
+  after: number;
+  delta: number;
+}
+
+export interface AudienceRegressionResult {
+  feature: string;
+  severity: RegressionSeverity;
+  summary: string;
+  shifts: VariantShift[];
+  controlShift: VariantShift;
+  allocationsSumValid: boolean;
+}
+
+export interface AudienceGuardReport {
+  environment: string;
+  sourceEnvironment: string;
+  timestamp: string;
+  regressions: AudienceRegressionResult[];
+  flagsChecked: number;
+  flagsUnchanged: number;
+  summary: { critical: number; warning: number; info: number; total: number };
+}

@@ -6,6 +6,7 @@ const NAV_ITEMS = [
   { to: '/app/sync',      label: 'Sync',       icon: '↑' },
   { to: '/app/forensics', label: 'Forensics',  icon: '⌕' },
   { to: '/app/policy',    label: 'Policy',     icon: '✦' },
+  { to: '/app/audience',  label: 'Audience',   icon: '⚑' },
 ];
 
 interface SidebarProps {

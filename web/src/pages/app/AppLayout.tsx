@@ -8,6 +8,7 @@ const PAGE_TITLES: Record<string, string> = {
   '/app/sync': 'Sync',
   '/app/forensics': 'Forensics',
   '/app/policy': 'Policy',
+  '/app/audience': 'Audience Guard',
 };
 
 export default function AppLayout() {
