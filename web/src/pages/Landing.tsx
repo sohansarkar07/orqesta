@@ -4,6 +4,14 @@ import { Button } from '../components/ui/Button';
 import { Panel } from '../components/ui/Panel';
 import { LandscapeIllustration } from '../components/landing/Illustration';
 
+function XIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.828Z"/>
+    </svg>
+  );
+}
+
 /* ─── Token strip ─────────────────────────────────────────────────────────── */
 function TokenStrip() {
   const tokens = [
@@ -108,6 +116,12 @@ function Hero() {
             <Button variant="secondary" size="lg" style={{ fontSize: '15px', padding: '14px 24px', gap: '10px' }}>
               <GitHubIcon />
               GitHub
+            </Button>
+          </a>
+          <a href="https://x.com/orqesta_flag" target="_blank" rel="noopener noreferrer">
+            <Button variant="secondary" size="lg" style={{ fontSize: '15px', padding: '14px 20px', gap: '10px' }}>
+              <XIcon />
+              Follow
             </Button>
           </a>
         </div>
@@ -701,14 +715,6 @@ function FAQItem({ q, a }: { q: string; a: string }) {
 }
 
 /* ─── Footer ──────────────────────────────────────────────────────────────── */
-function XIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 1200 1227" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path d="M714.163 519.284L1160.89 0H1055.03L667.137 450.887L357.328 0H0L468.492 681.821L0 1226.37H105.866L515.491 750.218L842.672 1226.37H1200L714.163 519.284ZM569.165 687.828L521.697 619.934L144.011 79.6944H306.615L611.412 515.685L658.88 583.579L1055.08 1150.3H892.476L569.165 687.828Z"/>
-    </svg>
-  );
-}
-
 function Footer() {
   const cols = [
     {
@@ -837,9 +843,6 @@ function Footer() {
         }}>
           <span style={{ fontSize: '13px', color: 'var(--ink-400)' }}>
             © 2026 Orqesta. Open source under MIT.
-          </span>
-          <span style={{ fontSize: '13px', color: 'var(--ink-300)' }}>
-            Built for the Toggle Wars Hackathon
           </span>
         </div>
       </div>
