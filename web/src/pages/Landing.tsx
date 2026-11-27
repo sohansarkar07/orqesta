@@ -51,20 +51,24 @@ function TokenStrip() {
 function Hero() {
   return (
     <section style={{
-      minHeight: 'calc(100vh - 60px)',
+      minHeight: 'calc(100vh - 56px)',
       display: 'grid',
       gridTemplateColumns: '1.1fr 1fr',
       overflow: 'hidden',
-    }}>
+    }}
+    className="hero-grid"
+    >
       {/* Left — text */}
-      <div style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        padding: '80px 72px 80px 96px',
-        gap: '28px',
-        maxWidth: '660px',
-      }}>
+      <div
+        className="hero-left"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          padding: '80px 72px 80px 96px',
+          gap: '28px',
+        }}
+      >
         {/* Heading */}
         <div>
           <h1 style={{
@@ -129,7 +133,9 @@ function Hero() {
       </div>
 
       {/* Right — interactive demo panel */}
-      <div style={{
+      <div
+        className="hero-right"
+        style={{
         background: 'linear-gradient(135deg, #E8E4DC 0%, #D6D2CA 100%)',
         position: 'relative',
         overflow: 'hidden',
@@ -330,7 +336,7 @@ function FeatureCard({ number, title, description, command, accent }: FeatureCar
 
 function Features() {
   return (
-    <section id="features" style={{ padding: '100px 0', background: 'var(--ivory)' }}>
+    <section id="features" style={{ padding: '100px 0', background: 'var(--ivory)' }} className="section-pad">
       <div className="container">
         <div style={{ marginBottom: '56px' }}>
           <p style={{ fontSize: '12px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage)', marginBottom: '12px' }}>
@@ -341,7 +347,7 @@ function Features() {
           </h2>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }} className="feature-grid">
           <FeatureCard
             number="01"
             title="Drift Detection & Selective Sync"
@@ -386,13 +392,12 @@ function SafetySection() {
       padding: '80px 0',
       position: 'relative',
       overflow: 'hidden',
-    }}>
-      {/* Subtle background rings */}
+    }} className="safety-section">
       <div style={{ position: 'absolute', top: '-80px', right: '-80px', width: '400px', height: '400px', borderRadius: '50%', border: '1px solid rgba(168,196,154,0.12)', pointerEvents: 'none' }} />
       <div style={{ position: 'absolute', top: '-40px', right: '-40px', width: '280px', height: '280px', borderRadius: '50%', border: '1px solid rgba(168,196,154,0.08)', pointerEvents: 'none' }} />
 
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '80px', alignItems: 'center' }} className="safety-grid">
           <div>
             <p style={{ fontSize: '12px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage-light)', marginBottom: '12px' }}>
               Safe by default
@@ -482,7 +487,7 @@ function Architecture() {
   }, []);
 
   return (
-    <section id="architecture" style={{ padding: '100px 0', background: 'var(--ivory-mid)' }}>
+    <section id="architecture" style={{ padding: '100px 0', background: 'var(--ivory-mid)' }} className="section-pad">
       <div className="container">
         <div style={{ marginBottom: '56px' }}>
           <p style={{ fontSize: '12px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage)', marginBottom: '12px' }}>
@@ -505,7 +510,7 @@ function Architecture() {
           justifyContent: 'center',
           minHeight: '500px',
           overflow: 'auto',
-        }}>
+        }} className="arch-box">
           <div className="mermaid" style={{ width: '100%', maxWidth: '1100px' }}>
 {`graph LR
     CLI["<b>CLI</b><br/><span style='font-size:13px;opacity:0.65'>11 commands</span>"]
@@ -543,7 +548,7 @@ function Architecture() {
 /* ─── Install section ─────────────────────────────────────────────────────── */
 function Install() {
   return (
-    <section id="docs" style={{ padding: '100px 0', background: 'var(--ivory)' }}>
+    <section id="docs" style={{ padding: '100px 0', background: 'var(--ivory)' }} className="section-pad">
       <div className="container" style={{ maxWidth: '720px' }}>
         <p style={{ fontSize: '12px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage)', marginBottom: '12px' }}>
           Get started
@@ -610,7 +615,7 @@ function FAQ() {
   ];
 
   return (
-    <section id="faq" style={{ padding: '100px 0', background: 'var(--white)' }}>
+    <section id="faq" style={{ padding: '100px 0', background: 'var(--white)' }} className="section-pad">
       <div className="container" style={{ maxWidth: '920px' }}>
         <div style={{ marginBottom: '48px' }}>
           <p style={{ fontSize: '12px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--sage)', marginBottom: '12px' }}>
@@ -707,12 +712,12 @@ function Footer() {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-      }}>
+      }} >
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <span style={{ fontFamily: 'var(--font-serif)', fontSize: '16px', color: 'var(--ink-900)' }}>Orqesta</span>
           <span style={{ color: 'var(--ink-300)', fontSize: '12px' }}>v0.1.0</span>
         </div>
-        <div style={{ display: 'flex', gap: '24px' }}>
+        <div className="footer-inner" style={{ display: 'flex', gap: '24px' }}>
           {[
             { label: 'GitHub', href: 'https://github.com/sohansarkar07/orqesta' },
             { label: 'MIT License', href: 'https://github.com/sohansarkar07/orqesta/blob/main/LICENSE' },

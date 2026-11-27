@@ -100,7 +100,7 @@ export default function Overview() {
     }
 
     return (
-      <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '28px' }}>
+      <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '28px' }} className="app-page">
         <div>
           <h1 style={{ fontSize: '24px', fontWeight: 500, color: 'var(--ink-900)' }}>Overview</h1>
           <p style={{ fontSize: '13px', color: 'var(--ink-400)', marginTop: '4px' }}>
@@ -108,7 +108,7 @@ export default function Overview() {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }} className="stat-grid">
           <StatCard label="Projects" value={projectCount} sub="accessible" accent="var(--ink-700)" />
           <StatCard label="Environments" value={envCount} sub="across all projects" accent="var(--status-ok)" />
           <StatCard label="Organisations" value={connectionStatus.data.organisations?.length ?? 0} sub="connected" accent="var(--sage)" />
@@ -116,7 +116,7 @@ export default function Overview() {
 
         <Panel style={{ padding: '24px' }}>
           <h2 style={{ fontSize: '15px', fontWeight: 500, marginBottom: '16px' }}>Quick Actions</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px' }} className="quick-actions-grid">
             <Link to="/app/compare">
               <Button variant="secondary" style={{ width: '100%', justifyContent: 'flex-start' }}>
                 ⇄ Compare Environments

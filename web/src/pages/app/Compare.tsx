@@ -69,7 +69,7 @@ export default function Compare() {
   }
 
   return (
-    <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+    <div style={{ padding: '32px', display: 'flex', flexDirection: 'column', gap: '24px' }} className="app-page">
       <div>
         <h1 style={{ fontSize: '24px', fontWeight: 500 }}>Environment Comparison</h1>
         <p style={{ fontSize: '13px', color: 'var(--ink-400)', marginTop: '4px' }}>
@@ -80,7 +80,7 @@ export default function Compare() {
       {/* Selection form */}
       <Panel style={{ padding: '24px' }}>
         <h2 style={{ fontSize: '15px', fontWeight: 500, marginBottom: '16px' }}>Select Environments</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '16px' }} className="compare-form-grid">
           {/* Project */}
           <div>
             <label style={{ display: 'block', fontSize: '12px', fontWeight: 500, color: 'var(--ink-700)', marginBottom: '6px' }}>

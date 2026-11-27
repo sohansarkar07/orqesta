@@ -79,3 +79,136 @@ img { display: block; max-width: 100%; }
 /* ─── Utilities ──────────────────────────────────────────────────────────── */
 .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+/* ─── Responsive ─────────────────────────────────────────────────────────── */
+
+/* Nav */
+@media (max-width: 768px) {
+  .nav-links { display: none !important; }
+  .nav-cta-full { display: none !important; }
+  .nav-cta-mobile { display: flex !important; }
+  .nav-inner { padding: 0 16px !important; }
+}
+
+/* Hero — stack on mobile */
+@media (max-width: 900px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .hero-right {
+    display: none !important;
+  }
+  .hero-left {
+    padding: 56px 24px !important;
+    max-width: 100% !important;
+  }
+}
+
+/* Feature cards — single column on mobile */
+@media (max-width: 900px) {
+  .feature-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Safety section — stack on mobile */
+@media (max-width: 768px) {
+  .safety-grid {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+  .safety-section {
+    padding: 60px 0 !important;
+  }
+}
+
+/* Architecture section */
+@media (max-width: 768px) {
+  .arch-box {
+    padding: 24px 16px !important;
+  }
+}
+
+/* Install / FAQ / sections */
+@media (max-width: 768px) {
+  .section-pad {
+    padding: 64px 0 !important;
+  }
+  .container {
+    padding: 0 1.25rem;
+  }
+}
+
+/* Footer */
+@media (max-width: 600px) {
+  .footer-inner {
+    flex-direction: column !important;
+    gap: 16px !important;
+    align-items: flex-start !important;
+  }
+}
+
+/* Dashboard sidebar — hidden on mobile, slide-in drawer */
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed !important;
+    left: 0;
+    top: 56px;
+    bottom: 0;
+    z-index: 200;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease;
+    box-shadow: 4px 0 24px rgba(26,25,22,0.12);
+  }
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  .sidebar-overlay {
+    display: block !important;
+  }
+  .app-layout {
+    flex-direction: column !important;
+  }
+  .mobile-topbar {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .mobile-topbar { display: flex !important; }
+  .sidebar-overlay { display: block !important; }
+  .app-layout { height: auto !important; overflow: visible !important; }
+  .mobile-topbar-spacer { height: 48px !important; }
+}
+
+@media (min-width: 769px) {
+  .mobile-topbar { display: none !important; }
+  .sidebar-overlay { display: none !important; }
+}
+
+/* App pages inner content padding */
+@media (max-width: 768px) {
+  .app-page {
+    padding: 16px !important;
+  }
+  .stat-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .quick-actions-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .compare-form-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .compare-table-row {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .compare-table-row span:nth-child(3),
+  .compare-table-row span:nth-child(4) {
+    display: none;
+  }
+  .compare-table-header {
+    display: none !important;
+  }
+}
+
