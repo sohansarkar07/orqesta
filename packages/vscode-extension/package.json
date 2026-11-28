@@ -1,0 +1,247 @@
+{
+  "name": "orqesta-vscode",
+  "displayName": "ORQESTA — Configuration Safety for Flagsmith",
+  "description": "Browse feature flags, detect environment drift, evaluate identity regressions, enforce policy, and review release readiness — all inside VS Code.",
+  "version": "0.1.0",
+  "publisher": "orqesta",
+  "icon": "resources/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sohansarkar07/orqesta.git"
+  },
+  "homepage": "https://github.com/sohansarkar07/orqesta",
+  "bugs": {
+    "url": "https://github.com/sohansarkar07/orqesta/issues"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Testing",
+    "Linters"
+  ],
+  "keywords": [
+    "flagsmith",
+    "feature-flags",
+    "configuration",
+    "drift",
+    "devops"
+  ],
+  "license": "MIT",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/src/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "orqesta",
+          "title": "ORQESTA",
+          "icon": "resources/icons/orqesta.svg"
+        }
+      ]
+    },
+    "views": {
+      "orqesta": [
+        {
+          "id": "orqesta.overview",
+          "name": "Overview",
+          "icon": "$(home)"
+        },
+        {
+          "id": "orqesta.flags",
+          "name": "Feature Flags",
+          "icon": "$(symbol-boolean)"
+        },
+        {
+          "id": "orqesta.codeIntelligence",
+          "name": "Code Intelligence",
+          "icon": "$(search)"
+        },
+        {
+          "id": "orqesta.drift",
+          "name": "Environment Drift",
+          "icon": "$(diff)"
+        },
+        {
+          "id": "orqesta.safety",
+          "name": "Safety Findings",
+          "icon": "$(shield)"
+        },
+        {
+          "id": "orqesta.release",
+          "name": "Release Readiness",
+          "icon": "$(rocket)"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "orqesta.connect",
+        "title": "ORQESTA: Connect to Flagsmith",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "orqesta.refreshFlags",
+        "title": "ORQESTA: Refresh Feature Flags",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "orqesta.scanWorkspace",
+        "title": "ORQESTA: Scan Workspace",
+        "icon": "$(search)"
+      },
+      {
+        "command": "orqesta.compareEnvironments",
+        "title": "ORQESTA: Compare Environments",
+        "icon": "$(diff)"
+      },
+      {
+        "command": "orqesta.runAudienceGuard",
+        "title": "ORQESTA: Run Audience Guard",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "orqesta.evaluateIdentities",
+        "title": "ORQESTA: Evaluate Identities",
+        "icon": "$(person)"
+      },
+      {
+        "command": "orqesta.runPolicyCheck",
+        "title": "ORQESTA: Run Policy Check",
+        "icon": "$(checklist)"
+      },
+      {
+        "command": "orqesta.openSafetyFindings",
+        "title": "ORQESTA: Open Safety Findings",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "orqesta.openReleaseReadiness",
+        "title": "ORQESTA: Open Release Readiness",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "orqesta.reviewSyncPlan",
+        "title": "ORQESTA: Review Sync Plan",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "orqesta.openDashboard",
+        "title": "ORQESTA: Open Dashboard",
+        "icon": "$(browser)"
+      },
+      {
+        "command": "orqesta.copyFlagName",
+        "title": "Copy Flag Name",
+        "icon": "$(copy)"
+      },
+      {
+        "command": "orqesta.refreshView",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "orqesta.refreshFlags",
+          "when": "view == orqesta.flags",
+          "group": "navigation"
+        },
+        {
+          "command": "orqesta.scanWorkspace",
+          "when": "view == orqesta.codeIntelligence",
+          "group": "navigation"
+        },
+        {
+          "command": "orqesta.compareEnvironments",
+          "when": "view == orqesta.drift",
+          "group": "navigation"
+        },
+        {
+          "command": "orqesta.refreshView",
+          "when": "view == orqesta.safety",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "orqesta.copyFlagName",
+          "when": "viewItem == flagItem",
+          "group": "inline"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "ORQESTA",
+      "properties": {
+        "orqesta.serverUrl": {
+          "type": "string",
+          "default": "http://localhost:3001",
+          "description": "URL of the Orqesta API server"
+        },
+        "orqesta.autoScan": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically scan workspace on file save"
+        },
+        "orqesta.scanInclude": {
+          "type": "array",
+          "default": [
+            "**/*.ts",
+            "**/*.tsx",
+            "**/*.js",
+            "**/*.jsx"
+          ],
+          "description": "File patterns to include in workspace scan"
+        },
+        "orqesta.scanExclude": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/dist/**",
+            "**/build/**",
+            "**/.next/**",
+            "**/out/**"
+          ],
+          "description": "File patterns to exclude from workspace scan"
+        },
+        "orqesta.defaultProject": {
+          "type": "number",
+          "description": "Default Flagsmith project ID"
+        },
+        "orqesta.defaultSourceEnv": {
+          "type": "string",
+          "description": "Default source environment name for comparisons"
+        },
+        "orqesta.defaultTargetEnv": {
+          "type": "string",
+          "description": "Default target environment name for comparisons"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "node ./out/test/runTest.js",
+    "package": "vsce package",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.3.0",
+    "@vscode/vsce": "^2.24.0",
+    "mocha": "^12.0.3",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "axios": "^1.7.9"
+  }
+}
