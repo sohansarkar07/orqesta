@@ -12,7 +12,7 @@ function XIcon() {
   );
 }
 
-/* â”€â”€â”€ Token strip â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Token strip ─────────────────────────────────────────────────────────── */
 function TokenStrip() {
   const tokens = [
     'Environment Drift Detection',
@@ -45,7 +45,7 @@ function TokenStrip() {
             textTransform: 'uppercase',
             color: 'var(--ink-500)',
           }}>
-            <span style={{ color: 'var(--sage)', marginRight: '12px' }}>â—†</span>
+            <span style={{ color: 'var(--sage)', marginRight: '12px' }}>◆</span>
             {t}
           </span>
         ))}
@@ -55,7 +55,7 @@ function TokenStrip() {
   );
 }
 
-/* â”€â”€â”€ Hero â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Hero ────────────────────────────────────────────────────────────────── */
 function Hero() {
   return (
     <section style={{
@@ -66,7 +66,7 @@ function Hero() {
     }}
     className="hero-grid"
     >
-      {/* Left â€” text */}
+      {/* Left — text */}
       <div
         className="hero-left"
         style={{
@@ -101,7 +101,7 @@ function Hero() {
             fontWeight: 300,
           }}>
             Orqesta brings configuration safety to Flagsmith. Compare environments,
-            investigate changes with forensics, and enforce policies â€” all before
+            investigate changes with forensics, and enforce policies — all before
             production deploys.
           </p>
         </div>
@@ -147,7 +147,7 @@ function Hero() {
         </div>
       </div>
 
-      {/* Right â€” demo video */}
+      {/* Right — demo video */}
       <div
         className="hero-right"
         style={{
@@ -205,7 +205,7 @@ function Hero() {
     </section>
   );
 }
-/* â”€â”€â”€ Feature cards â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Feature cards ───────────────────────────────────────────────────────── */
 interface FeatureCardProps {
   number: string;
   title: string;
@@ -268,7 +268,7 @@ function Features() {
           <FeatureCard
             number="01"
             title="Drift Detection & Selective Sync"
-            description="Compare any two Flagsmith environments. See exactly what differs â€” enabled state, remote config values, multivariate allocations. Generate a typed plan, preview it, then apply with a stale-plan safety check."
+            description="Compare any two Flagsmith environments. See exactly what differs — enabled state, remote config values, multivariate allocations. Generate a typed plan, preview it, then apply with a stale-plan safety check."
             command="orqesta compare Staging Production"
             accent="var(--sage)"
           />
@@ -302,7 +302,7 @@ function Features() {
   );
 }
 
-/* â”€â”€â”€ Safety callout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Safety callout ──────────────────────────────────────────────────────── */
 function SafetySection() {
   const checks = [
     'Stale-plan detection: target state snapshot compared before every apply',
@@ -310,7 +310,7 @@ function SafetySection() {
     'Interactive y/N gate on production changes',
     'API keys masked in all output, never logged',
     'Post-apply verification re-fetches and re-diffs',
-    'Partial failures reported individually â€” never silently swallowed',
+    'Partial failures reported individually — never silently swallowed',
   ];
 
   return (
@@ -348,7 +348,7 @@ function SafetySection() {
                 borderRadius: 'var(--radius-md)',
                 border: '1px solid rgba(168,196,154,0.12)',
               }}>
-                <span style={{ color: 'var(--sage-light)', fontSize: '14px', marginTop: '1px', flexShrink: 0 }}>âœ“</span>
+                <span style={{ color: 'var(--sage-light)', fontSize: '14px', marginTop: '1px', flexShrink: 0 }}>✓</span>
                 <span style={{ fontSize: '13px', color: '#C8C4BC', lineHeight: 1.5 }}>{check}</span>
               </div>
             ))}
@@ -359,7 +359,7 @@ function SafetySection() {
   );
 }
 
-/* â”€â”€â”€ Architecture section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Architecture section ────────────────────────────────────────────────── */
 function Architecture() {
   React.useEffect(() => {
     // Dynamically load and initialize mermaid
@@ -472,7 +472,7 @@ function Architecture() {
   );
 }
 
-/* â”€â”€â”€ Install section â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Install section ─────────────────────────────────────────────────────── */
 function Install() {
   return (
     <section id="docs" style={{ padding: '100px 0', background: 'var(--ivory)' }} className="section-pad">
@@ -512,7 +512,7 @@ function Install() {
   );
 }
 
-/* â”€â”€â”€ FAQ â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── FAQ ─────────────────────────────────────────────────────────────────── */
 function FAQ() {
   const faqs = [
     {
@@ -525,7 +525,7 @@ function FAQ() {
     },
     {
       q: 'What is stale-plan protection?',
-      a: 'When you generate a sync plan, Orqesta snapshots the target environment state. Before applying, it re-checks for concurrent changes. If another user modified the target in the meantime, those operations are skipped â€” no silent overwrites.',
+      a: 'When you generate a sync plan, Orqesta snapshots the target environment state. Before applying, it re-checks for concurrent changes. If another user modified the target in the meantime, those operations are skipped — no silent overwrites.',
     },
     {
       q: 'Can I use Orqesta in CI/CD pipelines?',
@@ -627,7 +627,7 @@ function FAQItem({ q, a }: { q: string; a: string }) {
   );
 }
 
-/* â”€â”€â”€ Footer â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Footer ──────────────────────────────────────────────────────────────── */
 function Footer() {
   const cols = [
     {
@@ -755,7 +755,7 @@ function Footer() {
           gap: '8px',
         }}>
           <span style={{ fontSize: '13px', color: 'var(--ink-400)' }}>
-            Â© 2026 Orqesta. Open source under MIT.
+            © 2026 Orqesta. Open source under MIT.
           </span>
         </div>
       </div>
@@ -771,7 +771,7 @@ function GitHubIcon() {
   );
 }
 
-/* â”€â”€â”€ Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Page ────────────────────────────────────────────────────────────────── */
 export default function Landing() {
   return (
     <>
