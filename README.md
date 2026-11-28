@@ -7,7 +7,7 @@ Orqesta is an open-source CLI + web dashboard built on top of [Flagsmith](https:
 - **What is different between my environments?** — Compare any two environments and get a readable, categorised drift report.
 - **What changed, who changed it, and what did it look like before?** — Inspect structured audit history with before/after field values.
 - **Does our configuration meet our standards?** — Run policy checks in CI and catch violations before they reach production.
-- **Did my sync accidentally shift user exposure?** — Audience Regression Guard catches multivariate allocation shifts after a sync.
+- **Did my sync accidentally shift user exposure?** — Audience Regression Guard catches multivariate allocation shifts and identity-level evaluation regressions.
 
 Built for [Toggle Wars Hackathon — Track 03: Build on Open Source Flagsmith](https://www.wemakedevs.org/hackathons/flagsmith).
 
@@ -15,7 +15,17 @@ Built for [Toggle Wars Hackathon — Track 03: Build on Open Source Flagsmith](h
 
 ## Quick Start
 
-### Option A — Docker (self-hosted Flagsmith + Orqesta, 5 minutes)
+### Option A — npm (global install)
+
+```bash
+npm install -g orqesta
+
+export ORQUESTA_API_TOKEN="your_flagsmith_org_token"
+orqesta doctor
+orqesta compare Staging Production
+```
+
+### Option B — Docker (self-hosted Flagsmith + Orqesta, 5 minutes)
 
 ```bash
 git clone https://github.com/sohansarkar07/orqesta.git
@@ -29,7 +39,7 @@ docker compose up -d
 
 **→ [Full Docker guide](./QUICKSTART.md)**
 
-### Option B — Flagsmith Cloud + local dev
+### Option C — Flagsmith Cloud + local dev
 
 ```bash
 git clone https://github.com/sohansarkar07/orqesta.git
@@ -43,7 +53,7 @@ npm run server         # http://localhost:3001
 cd web && npm run dev  # http://localhost:5173
 ```
 
-### Option C — CLI only
+### Option D — CLI from source
 
 ```bash
 git clone https://github.com/sohansarkar07/orqesta.git
@@ -60,13 +70,13 @@ orqesta compare Staging Production
 
 Orqesta needs a **Flagsmith Organisation API Token** (Management API).
 
-**Obtain it from:** Flagsmith dashboard → click your organisation name → **API Access** tab → **Create API Key**.
+**Get it from:** Flagsmith dashboard → click your organisation name → **API Access** tab → **Create API Key**.
 
 | Variable | Purpose | Required |
 |---|---|---|
 | `ORQUESTA_API_TOKEN` | Management API token | Yes |
 | `ORQUESTA_API_URL` | Management API base URL | No (default: `https://api.flagsmith.com/api/v1`) |
-| `ORQUESTA_ENVIRONMENT_KEY` | Environment key (`ser.` prefix) for Flags API | No |
+| `ORQUESTA_ENVIRONMENT_KEY` | Server-side env key (`ser.` prefix) for Flags API | No |
 | `ORQUESTA_FLAGS_API_URL` | Flags API base URL | No (default: `https://edge.api.flagsmith.com/api/v1`) |
 | `FLAGSMITH_API_KEY` | Legacy alias for `ORQUESTA_API_TOKEN` | No |
 | `FLAGSMITH_API_URL` | Legacy alias for `ORQUESTA_API_URL` | No |
@@ -76,11 +86,13 @@ Copy `.env.example` to `.env` and fill in your values. Never commit `.env`.
 ### Self-hosted Flagsmith
 
 ```bash
-export ORQUESTA_API_TOKEN="your_token"
+export ORQUESTA_API_TOKEN="your_user_token"
 export ORQUESTA_API_URL="http://localhost:8000/api/v1"
 export ORQUESTA_FLAGS_API_URL="http://localhost:8000/api/v1"
 orqesta doctor
 ```
+
+> **Note on auth headers:** Flagsmith Cloud Organisation API keys use `Authorization: Api-Key <token>`. Self-hosted Flagsmith user tokens use `Authorization: Token <token>`. Orqesta detects this automatically based on the API URL.
 
 ---
 
@@ -123,7 +135,7 @@ orqesta inspect checkout_redesign
 orqesta inspect checkout_redesign --with-changes
 ```
 
-> **Note:** The Flagsmith audit API requires a paid plan. On free-tier Cloud accounts, Orqesta shows a clear message and suggests the CLI fallback.
+> **Note:** The Flagsmith audit API requires a paid plan. On free-tier Cloud, Orqesta shows a clear message and suggests the CLI fallback.
 
 ### 4. Policy Engine
 
@@ -160,7 +172,7 @@ orqesta eval Development Production
 
 # Output per identity:
 #   [ENABLEMENT_REGRESSION] dark_mode — user loses access
-#   [VALUE_CHANGE]          api_rate_limit — value changed
+#   [VALUE_CHANGE]          hero_text — value changed
 ```
 
 Fixture file format (`orqesta-identities.yml`):
@@ -174,6 +186,8 @@ identities:
     traits:
       - key: plan
         value: premium
+      - key: country
+        value: India
 ```
 
 Supported regression types: `ENABLEMENT_REGRESSION`, `ENABLEMENT_CHANGE`, `VARIANT_CHANGE`, `VALUE_CHANGE`, `MISSING_FEATURE`, `EVALUATION_ERROR`.
@@ -192,10 +206,11 @@ orqesta verify <source> <target>              # post-sync check
 orqesta inspect <feature> [--with-changes]    # audit history
 orqesta history <feature>                     # full change history
 orqesta lint <environment> [--policy <path>]  # policy checks
-orqesta guard <source> <target>               # audience regression
-orqesta eval <source> <target>              # identity-level evaluation
-orqesta eval <source> <target> --init      # create starter fixture file
+orqesta guard <source> <target>               # audience guard (MV allocations)
+orqesta eval <source> <target>                # identity-level evaluation
+orqesta eval <source> <target> --init         # create starter fixture file
 orqesta report <source> <target>              # export report
+orqesta config show                           # view config (key masked)
 orqesta config set-key <token>                # store token
 orqesta config set-url <url>                  # set API URL
 orqesta config set-project <id>               # set default project
@@ -271,21 +286,22 @@ This creates four flags with intentional drift between Staging and Production:
 
 ```
 src/
-├── cli/commands/           11 CLI commands
+├── cli/commands/           12 CLI commands
 ├── flagsmith/client.ts     Management API + Flags API HTTP client (dual auth)
 ├── drift/comparator.ts     Cross-environment diff engine
 ├── sync/
 │   ├── planner.ts          Drift → SyncPlan with snapshot + checksum
 │   └── executor.ts         Stale detection, apply, post-sync verification
 ├── policies/               Policy engine — schema, loader, runner, 5 built-in rules
-├── audience/               Audience Regression Guard — MV allocation diff
+├── audience/               Audience Regression Guard + identity evaluation engine
+├── mcp/server.ts           MCP server — 5 tools for AI clients
 ├── config/index.ts         ConfigManager — env vars + local store
 └── types/                  Flagsmith, drift, sync types
 
 server/
 ├── index.ts                Express API server
 └── routes/                 settings, environments, compare, sync,
-                            forensics, policy, audience
+                            forensics, policy, audience, eval
 
 web/src/
 ├── pages/app/              Dashboard: Overview, Compare, Sync, Forensics,
@@ -307,13 +323,15 @@ web/src/
 | Audit entry detail | `GET /audit/<id>/` | Management API |
 | Project features | `GET /projects/<id>/features/` | Management API |
 | Segments | `GET /projects/<id>/segments/` | Management API |
+| Identity evaluation | `POST /identities/` | Flags API (`ser.` or client key) |
 | Environment document | `GET /environment-document/` | Flags API (`ser.` key) |
 
 Authentication:
-- Management API: `Authorization: Api-Key <token>`
-- Flags API: `X-Environment-Key: <ser.key>`
+- **Flagsmith Cloud** — `Authorization: Api-Key <org_token>`
+- **Self-hosted** — `Authorization: Token <user_token>`
+- **Flags API** — `X-Environment-Key: <env_key>`
 
-Compatible with Flagsmith Cloud and self-hosted instances.
+Orqesta detects Cloud vs self-hosted automatically based on the API URL.
 
 ---
 
@@ -329,12 +347,18 @@ docker compose ps
 # View logs
 docker compose logs -f flagsmith
 
-# Seed demo data (after creating org + API key in Flagsmith UI)
-export ORQUESTA_API_TOKEN="your_token"
+# Create admin account (first time)
+# Open http://localhost:8000 and register
+# OR use the API:
+# POST http://localhost:8000/api/v1/auth/users/
+# {"email":"admin@example.com","first_name":"Admin","last_name":"User","password":"yourpassword"}
+
+# Seed demo data
+export ORQUESTA_API_TOKEN="your_user_token"
 export ORQUESTA_API_URL="http://localhost:8000/api/v1"
 npx tsx scripts/seed-demo-data.ts
 
-# Run doctor to verify
+# Verify
 orqesta doctor
 ```
 
@@ -347,11 +371,11 @@ The `docker-compose.yml` runs:
 
 ## MCP Server
 
-Orqesta ships an MCP (Model Context Protocol) server that exposes its core tools to AI clients (Claude Desktop, Cursor, Kiro, VS Code with Continue, etc.).
+Orqesta ships an MCP (Model Context Protocol) server that exposes its core tools to AI clients (Claude Desktop, Cursor, Kiro, VS Code, etc.).
 
 ### Configuration
 
-Add to your MCP client config:
+Add to your MCP client config (replace `/path/to/orqesta`):
 
 ```json
 {
@@ -368,7 +392,7 @@ Add to your MCP client config:
 }
 ```
 
-For self-hosted Flagsmith, set `ORQUESTA_API_URL` and `ORQUESTA_FLAGS_API_URL` to your instance URLs.
+For self-hosted Flagsmith, also set `ORQUESTA_FLAGS_API_URL` to your instance URL.
 
 ### Available tools
 
@@ -384,11 +408,13 @@ All tools use the same core logic as the CLI — no duplicate business logic.
 
 ---
 
+## Tests
+
 ```bash
-npm test         # 106 tests across 9 test files
+npm test         # 112 tests across 10 test files
 ```
 
-All tests are pure unit tests — no live API calls, no network. Flagsmith responses are mocked.
+All tests are pure unit tests — no live API calls. Flagsmith responses are mocked.
 
 | File | Tests | Coverage |
 |---|---|---|
@@ -398,6 +424,7 @@ All tests are pure unit tests — no live API calls, no network. Flagsmith respo
 | `tests/forensics.test.ts` | 14 | Audit entry parsing |
 | `tests/policy.test.ts` | 37 | All 5 policy rules |
 | `tests/audience.guard.test.ts` | 11 | Audience Regression Guard |
+| `tests/audience.evaluator.test.ts` | 6 | Identity evaluation engine |
 | `server/tests/compare.test.ts` | 6 | Compare API route |
 | `server/tests/sync.test.ts` | 6 | Sync plan + apply routes |
 | `server/tests/settings.test.ts` | 7 | Credentials + secret masking |

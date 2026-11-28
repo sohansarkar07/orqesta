@@ -4,7 +4,21 @@ Get Orqesta running in under 10 minutes.
 
 ---
 
-## Option A — Docker (self-hosted Flagsmith + Orqesta)
+## Option A — npm (fastest)
+
+```bash
+npm install -g orqesta
+
+export ORQUESTA_API_TOKEN="your_flagsmith_org_token"
+orqesta doctor
+orqesta compare Staging Production
+```
+
+Get your token from https://app.flagsmith.com → Organisation name → API Access → Create API Key.
+
+---
+
+## Option B — Docker (self-hosted Flagsmith + Orqesta)
 
 Runs everything locally: Flagsmith, PostgreSQL, and Orqesta.
 
@@ -46,7 +60,7 @@ npx tsx scripts/seed-demo-data.ts
 
 ---
 
-## Option B — Flagsmith Cloud + local dev
+## Option C — Flagsmith Cloud + local dev
 
 No Docker needed. Uses your existing Flagsmith Cloud account.
 
@@ -78,7 +92,7 @@ Open http://localhost:5173/app — the dashboard will connect automatically usin
 
 ---
 
-## Option C — CLI only
+## Option D — CLI from source
 
 ```bash
 git clone https://github.com/sohansarkar07/orqesta.git
@@ -136,6 +150,11 @@ orqesta lint Production
 
 # 9. Check for audience allocation regressions (MV flags only)
 orqesta guard Staging Production
+
+# 10. Evaluate synthetic identities across environments
+orqesta eval Staging Production --init   # creates orqesta-identities.yml
+# edit the file, then:
+orqesta eval Staging Production
 ```
 
 ---
