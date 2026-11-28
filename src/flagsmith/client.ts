@@ -91,10 +91,16 @@ export class FlagsmithClient {
   }
 
   private createManagementClient(apiToken: string, baseUrl: string): AxiosInstance {
+    // Flagsmith Cloud Organisation API Keys use "Api-Key" prefix.
+    // Self-hosted Flagsmith user tokens use "Token" prefix.
+    // Detect by URL: cloud = api.flagsmith.com, self-hosted = anything else.
+    const isCloud = baseUrl.includes('api.flagsmith.com');
+    const authHeader = isCloud ? `Api-Key ${apiToken}` : `Token ${apiToken}`;
+
     const http = axios.create({
       baseURL: baseUrl.replace(/\/$/, ''),
       headers: {
-        Authorization: `Api-Key ${apiToken}`,
+        Authorization: authHeader,
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },

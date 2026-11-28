@@ -1,11 +1,27 @@
 {
   "name": "orqesta",
   "version": "0.1.0",
-  "description": "Flagsmith configuration safety, environment drift detection and change forensics CLI",
+  "description": "Flagsmith configuration safety, environment drift detection, change forensics and policy enforcement CLI",
   "type": "module",
   "bin": {
     "orqesta": "./dist/src/cli/index.js",
     "orqesta-mcp": "./dist/src/mcp/server.js"
+  },
+  "files": [
+    "dist/src",
+    "dist/server",
+    "examples",
+    ".env.example",
+    "README.md",
+    "QUICKSTART.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sohansarkar07/orqesta.git"
+  },
+  "homepage": "https://github.com/sohansarkar07/orqesta#readme",
+  "bugs": {
+    "url": "https://github.com/sohansarkar07/orqesta/issues"
   },
   "scripts": {
     "build": "tsc",

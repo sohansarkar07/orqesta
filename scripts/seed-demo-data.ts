@@ -15,8 +15,8 @@
 
 import axios from 'axios';
 
-const API_KEY = process.env.FLAGSMITH_API_KEY;
-const API_URL = (process.env.FLAGSMITH_API_URL ?? 'https://api.flagsmith.com/api/v1').replace(/\/$/, '');
+const API_KEY = process.env.ORQUESTA_API_TOKEN || process.env.FLAGSMITH_API_KEY;
+const API_URL = (process.env.ORQUESTA_API_URL || process.env.FLAGSMITH_API_URL || 'https://api.flagsmith.com/api/v1').replace(/\/$/, '');
 const PROJECT_ID_ENV = process.env.FLAGSMITH_PROJECT_ID;
 
 if (!API_KEY) {
@@ -24,10 +24,14 @@ if (!API_KEY) {
   process.exit(1);
 }
 
+// Self-hosted uses Token prefix, Cloud uses Api-Key
+const isCloud = API_URL.includes('api.flagsmith.com');
+const authHeader = isCloud ? `Api-Key ${API_KEY}` : `Token ${API_KEY}`;
+
 const http = axios.create({
   baseURL: API_URL,
   headers: {
-    Authorization: `Api-Key ${API_KEY}`,
+    Authorization: authHeader,
     'Content-Type': 'application/json',
   },
   timeout: 15_000,
@@ -75,7 +79,7 @@ async function createFeature(projectId: number, name: string, value?: string, en
 
 async function getFeatureStates(envApiKey: string) {
   const res = await http.get(`/environments/${envApiKey}/featurestates/?page_size=200`);
-  return res.data.results as Array<{ id: number; feature: { id: number; name: string }; enabled: boolean; feature_state_value: any }>;
+  return res.data.results as Array<{ id: number; feature: number | { id: number; name: string }; enabled: boolean; feature_state_value: any }>;
 }
 
 async function updateFeatureState(envApiKey: string, featureStateId: number, patch: { enabled?: boolean; feature_state_value?: any }) {
@@ -189,14 +193,23 @@ async function main() {
   // Apply states to Staging
   console.log(`Configuring Staging environment (${staging.name})...`);
   const stagingStates = await getFeatureStates(staging.api_key);
+  const stagingFeatures = await getFeatures(projectId);
+  const stagingFeatureByName = new Map(stagingFeatures.map((f) => [f.name, f.id]));
+
   for (const flag of flags) {
-    const state = stagingStates.find((s) => s.feature.name === flag.name);
+    const featureId = stagingFeatureByName.get(flag.name);
+    const state = stagingStates.find((s) => {
+      const fid = typeof s.feature === 'number' ? s.feature : s.feature.id;
+      return fid === featureId;
+    });
     if (state) {
       await updateFeatureState(staging.api_key, state.id, {
         enabled: flag.stagingEnabled,
         feature_state_value: flag.stagingValue,
       });
       console.log(`  ✓ ${flag.name}: enabled=${flag.stagingEnabled}, value=${JSON.stringify(flag.stagingValue)}`);
+    } else {
+      console.log(`  ⚠ ${flag.name}: state not found`);
     }
   }
   console.log('');
@@ -204,14 +217,21 @@ async function main() {
   // Apply states to Production
   console.log(`Configuring Production environment (${production.name})...`);
   const productionStates = await getFeatureStates(production.api_key);
+
   for (const flag of flags) {
-    const state = productionStates.find((s) => s.feature.name === flag.name);
+    const featureId = stagingFeatureByName.get(flag.name);
+    const state = productionStates.find((s) => {
+      const fid = typeof s.feature === 'number' ? s.feature : s.feature.id;
+      return fid === featureId;
+    });
     if (state) {
       await updateFeatureState(production.api_key, state.id, {
         enabled: flag.productionEnabled,
         feature_state_value: flag.productionValue,
       });
       console.log(`  ✓ ${flag.name}: enabled=${flag.productionEnabled}, value=${JSON.stringify(flag.productionValue)}`);
+    } else {
+      console.log(`  ⚠ ${flag.name}: state not found`);
     }
   }
 
