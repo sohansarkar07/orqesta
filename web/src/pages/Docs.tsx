@@ -2,7 +2,7 @@
 import { Panel } from '../components/ui/Panel';
 import { Button } from '../components/ui/Button';
 
-/* â”€â”€â”€ Sidebar Navigation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Sidebar Navigation ───────────────────────────────────────────────────── */
 function DocsSidebar({ activeSection }: { activeSection: string }) {
   const [navOpen, setNavOpen] = React.useState(false);
 
@@ -42,7 +42,7 @@ function DocsSidebar({ activeSection }: { activeSection: string }) {
         }}>
           Documentation
         </p>
-        {/* Mobile toggle â€” shown via CSS */}
+        {/* Mobile toggle — shown via CSS */}
         <button
           className="docs-sidebar-toggle"
           onClick={() => setNavOpen(!navOpen)}
@@ -54,7 +54,7 @@ function DocsSidebar({ activeSection }: { activeSection: string }) {
             alignItems: 'center', gap: '4px',
           }}
         >
-          {navOpen ? 'Hide â–²' : 'Show sections â–¼'}
+          {navOpen ? 'Hide ▲' : 'Show sections ▼'}
         </button>
       </div>
 
@@ -86,7 +86,7 @@ function DocsSidebar({ activeSection }: { activeSection: string }) {
   );
 }
 
-/* â”€â”€â”€ Code Block â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Code Block ───────────────────────────────────────────────────────────── */
 function CodeBlock({ code, language = 'bash' }: { code: string; language?: string }) {
   return (
     <Panel className="docs-code" style={{
@@ -111,7 +111,7 @@ function CodeBlock({ code, language = 'bash' }: { code: string; language?: strin
   );
 }
 
-/* â”€â”€â”€ Section Heading â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Section Heading ──────────────────────────────────────────────────────── */
 function SectionHeading({ id, children }: { id: string; children: React.ReactNode }) {
   return (
     <h2
@@ -157,18 +157,18 @@ function Paragraph({ children }: { children: React.ReactNode }) {
   );
 }
 
-/* â”€â”€â”€ Main Docs Content â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Main Docs Content ────────────────────────────────────────────────────── */
 function DocsContent() {
   return (
     <article className="docs-content" style={{ maxWidth: '740px', flexGrow: 1, minWidth: 0 }}>
       <div style={{ marginBottom: '32px' }}>
         <h1 style={{ fontSize: '48px', fontWeight: 500, marginBottom: '16px' }}>Documentation</h1>
         <p style={{ fontSize: '18px', color: 'var(--ink-500)', lineHeight: 1.6 }}>
-          Everything you need to know about Orqesta â€” from quick start to advanced usage.
+          Everything you need to know about Orqesta — from quick start to advanced usage.
         </p>
       </div>
 
-      {/* â”€â”€â”€ Introduction â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Introduction ─────────────────────────────────────────────────── */}
       <SectionHeading id="introduction">Introduction</SectionHeading>
       <Paragraph>
         Orqesta is a configuration safety tool built on top of <a href="https://flagsmith.com" target="_blank" rel="noopener" style={{ color: 'var(--sage)' }}>Flagsmith</a>.
@@ -179,7 +179,7 @@ function DocsContent() {
         It ships as a TypeScript CLI, an Express API server, a React dashboard, and an MCP server for AI clients.
       </Paragraph>
 
-      {/* â”€â”€â”€ Quick Start â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Quick Start ──────────────────────────────────────────────────── */}
       <SectionHeading id="quick-start">Quick Start</SectionHeading>
       <Paragraph>Run self-hosted Flagsmith + Orqesta together in one command:</Paragraph>
       <CodeBlock code={`git clone https://github.com/sohansarkar07/orqesta.git
@@ -190,11 +190,11 @@ docker compose up -d
       <Paragraph>
         After the containers start, open Flagsmith at <code>http://localhost:8000</code>, create an account,
         create a project with two environments, then get your Organisation API token from
-        <strong> Organisation â†’ API Access â†’ Create API Key</strong>.
+        <strong> Organisation → API Access → Create API Key</strong>.
         Open Orqesta at <code>http://localhost:3001</code>, go to Settings, and paste the token.
       </Paragraph>
 
-      {/* â”€â”€â”€ Installation â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Installation ─────────────────────────────────────────────────── */}
       <SectionHeading id="installation">Installation</SectionHeading>
 
       <SubHeading>From source (recommended)</SubHeading>
@@ -205,30 +205,30 @@ npm run build
 npm link          # links 'orqesta' globally`} />
 
       <SubHeading>Start the web dashboard</SubHeading>
-      <CodeBlock code={`# Terminal 1 â€” API server
+      <CodeBlock code={`# Terminal 1 — API server
 npm run server     # http://localhost:3001
 
-# Terminal 2 â€” web frontend
+# Terminal 2 — web frontend
 cd web && npm run dev  # http://localhost:5173`} />
 
-      {/* â”€â”€â”€ Configuration â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Configuration ────────────────────────────────────────────────── */}
       <SectionHeading id="configuration">Configuration</SectionHeading>
       <Paragraph>
-        Orqesta reads credentials from environment variables. The key variable is <code>ORQUESTA_API_TOKEN</code> â€”
-        a Flagsmith <strong>Organisation API Token</strong>, obtained from Organisation â†’ API Access â†’ Create API Key.
+        Orqesta reads credentials from environment variables. The key variable is <code>ORQUESTA_API_TOKEN</code> —
+        a Flagsmith <strong>Organisation API Token</strong>, obtained from Organisation → API Access → Create API Key.
       </Paragraph>
 
       <CodeBlock code={`# Required
 export ORQUESTA_API_TOKEN="your_org_api_token"
 
-# Optional â€” defaults to Flagsmith Cloud
+# Optional — defaults to Flagsmith Cloud
 export ORQUESTA_API_URL="https://api.flagsmith.com/api/v1"
 
 # Self-hosted example
 export ORQUESTA_API_URL="http://localhost:8000/api/v1"
 export ORQUESTA_FLAGS_API_URL="http://localhost:8000/api/v1"
 
-# Optional â€” improves performance for compare/lint
+# Optional — improves performance for compare/lint
 export ORQUESTA_ENVIRONMENT_KEY="ser.xxxxxxxxxxxxxxxx"`} />
 
       <Panel style={{ padding: '14px 18px', background: 'var(--ivory)', marginBottom: '20px' }}>
@@ -244,7 +244,7 @@ orqesta config set-url https://...  # set API URL
 orqesta config set-project 42       # set default project
 orqesta config show                 # view config (key masked)`} />
 
-      {/* â”€â”€â”€ Commands â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Commands ─────────────────────────────────────────────────────── */}
       <SectionHeading id="commands">CLI Commands</SectionHeading>
       <CodeBlock code={`orqesta doctor                               # health check
 orqesta environments                         # list environments
@@ -259,37 +259,37 @@ orqesta guard <source> <target>              # audience guard (MV allocations)
 orqesta eval <source> <target> [--init]      # identity evaluation
 orqesta report <source> <target>             # export report`} />
 
-      {/* â”€â”€â”€ Compare â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Compare ──────────────────────────────────────────────────────── */}
       <SectionHeading id="compare">Compare</SectionHeading>
-      <Paragraph>Detect configuration drift. Exits 0 if in sync, 1 if drift found â€” CI-safe.</Paragraph>
+      <Paragraph>Detect configuration drift. Exits 0 if in sync, 1 if drift found — CI-safe.</Paragraph>
       <CodeBlock code={`orqesta compare Staging Production
 orqesta compare Staging Production --project "My App"
 orqesta compare Staging Production --json > drift.json`} />
       <ul style={{ fontSize: '14px', lineHeight: 1.8, color: 'var(--ink-600)', marginBottom: '24px' }}>
-        <li><strong>enabled_state</strong> â€” Flag enabled in one env but not the other</li>
-        <li><strong>value_change</strong> â€” Remote config value differs</li>
-        <li><strong>multivariate_allocation</strong> â€” MV percentage allocation differs</li>
-        <li><strong>missing_in_target</strong> â€” Flag exists in source but not target</li>
-        <li><strong>missing_in_source</strong> â€” Flag exists in target but not source</li>
+        <li><strong>enabled_state</strong> — Flag enabled in one env but not the other</li>
+        <li><strong>value_change</strong> — Remote config value differs</li>
+        <li><strong>multivariate_allocation</strong> — MV percentage allocation differs</li>
+        <li><strong>missing_in_target</strong> — Flag exists in source but not target</li>
+        <li><strong>missing_in_source</strong> — Flag exists in target but not source</li>
       </ul>
 
-      {/* â”€â”€â”€ Sync â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Sync ─────────────────────────────────────────────────────────── */}
       <SectionHeading id="sync">Sync</SectionHeading>
       <Paragraph>Generate a typed sync plan, preview it, then apply only the operations you choose.</Paragraph>
       <CodeBlock code={`orqesta plan Staging Production      # generate plan
-orqesta apply --dry-run              # preview â€” no writes to Flagsmith
+orqesta apply --dry-run              # preview — no writes to Flagsmith
 orqesta apply                        # interactive y/N gate
 orqesta apply --yes                  # skip prompt (CI)
 orqesta verify Staging Production    # confirm environments are now in sync`} />
       <Panel style={{ padding: '14px 18px', background: 'var(--status-ok-bg)', border: '1px solid #C2D9BC', marginBottom: '20px' }}>
         <p style={{ fontSize: '13px', color: 'var(--olive)', margin: 0, lineHeight: 1.6 }}>
           <strong>Stale-plan protection:</strong> A snapshot of the target state is taken at plan creation time.
-          Before applying, Orqesta re-fetches the target and skips any operation where the target has changed since â€”
+          Before applying, Orqesta re-fetches the target and skips any operation where the target has changed since —
           no silent overwrites.
         </p>
       </Panel>
 
-      {/* â”€â”€â”€ Forensics â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Forensics ────────────────────────────────────────────────────── */}
       <SectionHeading id="forensics">Forensics</SectionHeading>
       <Paragraph>Inspect the full audit history for any feature flag with structured before/after field values.</Paragraph>
       <CodeBlock code={`orqesta inspect dark_mode
@@ -303,7 +303,7 @@ orqesta inspect dark_mode --environment Production --limit 50`} />
         </p>
       </Panel>
 
-      {/* â”€â”€â”€ Policy â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Policy ───────────────────────────────────────────────────────── */}
       <SectionHeading id="policy">Policy Engine</SectionHeading>
       <Paragraph>Define governance rules as YAML, run them against any environment, enforce in CI.</Paragraph>
       <CodeBlock code={`orqesta lint Production
@@ -345,14 +345,14 @@ policies:
       - Production`} />
 
       <ul style={{ fontSize: '14px', lineHeight: 1.8, color: 'var(--ink-600)', marginBottom: '24px' }}>
-        <li><code>naming_convention</code> â€” Enforce regex on flag names</li>
-        <li><code>require_description</code> â€” Flags must have descriptions</li>
-        <li><code>no_archived_flags_enabled</code> â€” Archived flags cannot be enabled</li>
-        <li><code>multivariate_allocations_sum</code> â€” MV percentages must sum to 100%</li>
-        <li><code>environment_parity</code> â€” Features enabled in source must exist in target</li>
+        <li><code>naming_convention</code> — Enforce regex on flag names</li>
+        <li><code>require_description</code> — Flags must have descriptions</li>
+        <li><code>no_archived_flags_enabled</code> — Archived flags cannot be enabled</li>
+        <li><code>multivariate_allocations_sum</code> — MV percentages must sum to 100%</li>
+        <li><code>environment_parity</code> — Features enabled in source must exist in target</li>
       </ul>
 
-      {/* â”€â”€â”€ Audience Guard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Audience Guard ───────────────────────────────────────────────── */}
       <SectionHeading id="audience">Audience Guard</SectionHeading>
       <Paragraph>
         Two tools detect when multivariate flag changes could affect user exposure.
@@ -361,8 +361,8 @@ policies:
       <SubHeading>Allocation comparison (orqesta guard)</SubHeading>
       <Paragraph>Compares the percentage allocations configured in Flagsmith between two environments.</Paragraph>
       <CodeBlock code={`orqesta guard Staging Production
-# critical: shift â‰¥10pp  â†’ exits 1
-# warning:  shift 1â€“9pp`} />
+# critical: shift ≥10pp  → exits 1
+# warning:  shift 1–9pp`} />
 
       <SubHeading>Identity evaluation (orqesta eval)</SubHeading>
       <Paragraph>
@@ -377,7 +377,7 @@ orqesta eval Development Production
 
 # Output example:
 #   user_standard
-#     [ENABLEMENT_REGRESSION] dark_mode â€” user loses access`} />
+#     [ENABLEMENT_REGRESSION] dark_mode — user loses access`} />
 
       <SubHeading>Fixture file format</SubHeading>
       <CodeBlock language="yaml" code={`version: 1
@@ -396,7 +396,7 @@ identities:
         <code>VARIANT_CHANGE</code>, <code>VALUE_CHANGE</code>, <code>MISSING_FEATURE</code>.
       </Paragraph>
 
-      {/* â”€â”€â”€ MCP Server â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── MCP Server ───────────────────────────────────────────────────── */}
       <SectionHeading id="mcp">MCP Server</SectionHeading>
       <Paragraph>
         Orqesta ships an MCP (Model Context Protocol) server that exposes its core tools to AI clients
@@ -422,14 +422,14 @@ npm install && npm run build
 
       <SubHeading>Available tools</SubHeading>
       <ul style={{ fontSize: '14px', lineHeight: 1.8, color: 'var(--ink-600)', marginBottom: '24px' }}>
-        <li><code>get_environments</code> â€” List all projects and environments</li>
-        <li><code>compare_environments</code> â€” Detect drift between two environments</li>
-        <li><code>run_policy_check</code> â€” Run policy rules against an environment</li>
-        <li><code>run_audience_guard</code> â€” Compare MV allocation shifts</li>
-        <li><code>eval_identities</code> â€” Identity-level evaluation across two environments</li>
+        <li><code>get_environments</code> — List all projects and environments</li>
+        <li><code>compare_environments</code> — Detect drift between two environments</li>
+        <li><code>run_policy_check</code> — Run policy rules against an environment</li>
+        <li><code>run_audience_guard</code> — Compare MV allocation shifts</li>
+        <li><code>eval_identities</code> — Identity-level evaluation across two environments</li>
       </ul>
 
-      {/* â”€â”€â”€ Web Dashboard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Web Dashboard ────────────────────────────────────────────────── */}
       <SectionHeading id="web-dashboard">Web Dashboard</SectionHeading>
       <Paragraph>Visual interface for all Orqesta capabilities.</Paragraph>
       <CodeBlock code={`# Development
@@ -441,16 +441,16 @@ cd web && npm run dev  # UI:  http://localhost:5173
 npm run build
 npm run server:prod  # http://localhost:3001`} />
       <ul style={{ fontSize: '14px', lineHeight: 1.8, color: 'var(--ink-600)', marginBottom: '24px' }}>
-        <li><strong>Settings</strong> â€” Connect/disconnect, masked key display</li>
-        <li><strong>Overview</strong> â€” Org, project, environment summary</li>
-        <li><strong>Compare</strong> â€” Visual drift report</li>
-        <li><strong>Sync</strong> â€” Interactive plan review and selective apply</li>
-        <li><strong>Forensics</strong> â€” Audit log (requires paid Flagsmith plan)</li>
-        <li><strong>Policy</strong> â€” Run checks with custom YAML editor</li>
-        <li><strong>Audience</strong> â€” Allocation shift visualisation</li>
+        <li><strong>Settings</strong> — Connect/disconnect, masked key display</li>
+        <li><strong>Overview</strong> — Org, project, environment summary</li>
+        <li><strong>Compare</strong> — Visual drift report</li>
+        <li><strong>Sync</strong> — Interactive plan review and selective apply</li>
+        <li><strong>Forensics</strong> — Audit log (requires paid Flagsmith plan)</li>
+        <li><strong>Policy</strong> — Run checks with custom YAML editor</li>
+        <li><strong>Audience</strong> — Allocation shift visualisation</li>
       </ul>
 
-      {/* â”€â”€â”€ Docker â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Docker ───────────────────────────────────────────────────────── */}
       <SectionHeading id="docker">Docker Deployment</SectionHeading>
       <CodeBlock code={`docker compose up -d                # start Flagsmith + Orqesta
 docker compose ps                   # check status
@@ -463,7 +463,7 @@ docker compose down                 # stop all`} />
         with API URL <code>http://localhost:8000/api/v1</code>.
       </Paragraph>
 
-      {/* â”€â”€â”€ API Reference â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── API Reference ────────────────────────────────────────────────── */}
       <SectionHeading id="api">API Reference</SectionHeading>
       <Panel style={{ padding: '20px 24px', marginBottom: '20px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '13px', fontFamily: '"SF Mono", monospace' }}>
@@ -490,14 +490,14 @@ docker compose down                 # stop all`} />
   -H "Content-Type: application/json" \\
   -d '{"projectId": 10, "sourceEnvName": "Staging", "targetEnvName": "Production"}'`} />
 
-      {/* â”€â”€â”€ Troubleshooting â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/* ─── Troubleshooting ──────────────────────────────────────────────── */}
       <SectionHeading id="troubleshooting">Troubleshooting</SectionHeading>
 
       <SubHeading>Cannot connect to Flagsmith</SubHeading>
       <Panel style={{ padding: '14px 18px', background: 'var(--ivory)', marginBottom: '16px' }}>
         <ul style={{ margin: 0, paddingLeft: '20px', fontSize: '14px', color: 'var(--ink-600)', lineHeight: 1.8 }}>
-          <li>Run <code>orqesta doctor</code> â€” it shows exactly which check fails</li>
-          <li>Token must be an Organisation API Token (from Organisation â†’ API Access), not an environment SDK key</li>
+          <li>Run <code>orqesta doctor</code> — it shows exactly which check fails</li>
+          <li>Token must be an Organisation API Token (from Organisation → API Access), not an environment SDK key</li>
           <li>For self-hosted, confirm <code>ORQUESTA_API_URL</code> matches your instance</li>
         </ul>
       </Panel>
@@ -529,16 +529,16 @@ docker compose down                 # stop all`} />
       {/* Footer */}
       <div style={{ marginTop: '64px', paddingTop: '32px', borderTop: 'var(--border-light)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div style={{ display: 'flex', gap: '24px' }}>
-          <a href="https://github.com/sohansarkar07/orqesta" target="_blank" rel="noopener" style={{ fontSize: '14px', color: 'var(--ink-500)', textDecoration: 'none' }}>GitHub â†’</a>
-          <a href="https://github.com/sohansarkar07/orqesta/issues" target="_blank" rel="noopener" style={{ fontSize: '14px', color: 'var(--ink-500)', textDecoration: 'none' }}>Report Issue â†’</a>
+          <a href="https://github.com/sohansarkar07/orqesta" target="_blank" rel="noopener" style={{ fontSize: '14px', color: 'var(--ink-500)', textDecoration: 'none' }}>GitHub →</a>
+          <a href="https://github.com/sohansarkar07/orqesta/issues" target="_blank" rel="noopener" style={{ fontSize: '14px', color: 'var(--ink-500)', textDecoration: 'none' }}>Report Issue →</a>
         </div>
-        <Button variant="secondary" size="sm" onClick={() => window.history.back()}>â† Back</Button>
+        <Button variant="secondary" size="sm" onClick={() => window.history.back()}>← Back</Button>
       </div>
     </article>
   );
 }
 
-/* â”€â”€â”€ Main Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+/* ─── Main Page ────────────────────────────────────────────────────────────── */
 export default function Docs() {
   return (
     <div className="docs-layout" style={{

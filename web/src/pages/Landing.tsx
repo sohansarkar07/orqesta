@@ -513,6 +513,93 @@ function Install() {
 }
 
 /* ─── FAQ ─────────────────────────────────────────────────────────────────── */
+function FlagsmithPromo() {
+  return (
+    <section style={{
+      background: 'var(--ivory-mid)',
+      borderTop: 'var(--border)',
+      borderBottom: 'var(--border)',
+      padding: '64px 0',
+    }}>
+      <div className="container" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '24px' }}>
+        {/* Badge */}
+        <div style={{
+          display: 'inline-flex', alignItems: 'center', gap: '8px',
+          background: 'var(--sage-pale)', border: '1px solid #C2D9BC',
+          borderRadius: '100px', padding: '5px 16px',
+        }}>
+          <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--olive)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
+            Built on Open Source
+          </span>
+        </div>
+
+        {/* Heading */}
+        <div>
+          <h2 style={{ fontSize: 'clamp(26px, 3.5vw, 40px)', fontWeight: 500, color: 'var(--ink-900)', marginBottom: '12px' }}>
+            Orqesta runs on <span style={{ color: 'var(--sage)' }}>Flagsmith</span>
+          </h2>
+          <p style={{ fontSize: '16px', color: 'var(--ink-500)', maxWidth: '520px', lineHeight: 1.65 }}>
+            Flagsmith is the open-source feature flagging platform at the heart of Orqesta.
+            Self-host it for free or use Flagsmith Cloud — Orqesta works with both.
+          </p>
+        </div>
+
+        {/* CTA buttons */}
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <a href="https://www.flagsmith.com/" target="_blank" rel="noopener noreferrer">
+            <button style={{
+              display: 'flex', alignItems: 'center', gap: '8px',
+              padding: '12px 24px', fontSize: '14px', fontWeight: 500,
+              color: 'white', background: 'var(--forest)',
+              border: 'none', borderRadius: '8px', cursor: 'pointer',
+              fontFamily: 'inherit', transition: 'all 0.15s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.boxShadow = '0 4px 16px rgba(46,64,40,0.3)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/>
+                <polyline points="15,3 21,3 21,9"/>
+                <line x1="10" y1="14" x2="21" y2="3"/>
+              </svg>
+              Try Flagsmith Free
+            </button>
+          </a>
+
+          <a href="https://github.com/Flagsmith/flagsmith" target="_blank" rel="noopener noreferrer">
+            <button style={{
+              display: 'flex', alignItems: 'center', gap: '8px',
+              padding: '12px 24px', fontSize: '14px', fontWeight: 500,
+              color: 'var(--ink-900)', background: 'white',
+              border: 'var(--border)', borderRadius: '8px', cursor: 'pointer',
+              fontFamily: 'inherit', transition: 'all 0.15s',
+            }}
+            onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--ink-900)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+            onMouseLeave={(e) => { e.currentTarget.style.borderColor = ''; e.currentTarget.style.transform = 'translateY(0)'; }}>
+              <GitHubIcon />
+              Star on GitHub
+            </button>
+          </a>
+        </div>
+
+        {/* Stats row */}
+        <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap', justifyContent: 'center', marginTop: '8px' }}>
+          {[
+            { label: 'GitHub Stars', value: '5k+' },
+            { label: 'Open Source', value: 'MIT' },
+            { label: 'Self-hostable', value: '✓' },
+            { label: 'Cloud available', value: '✓' },
+          ].map((s) => (
+            <div key={s.label} style={{ textAlign: 'center' }}>
+              <div style={{ fontSize: '20px', fontWeight: 600, color: 'var(--ink-900)', fontFamily: 'var(--font-serif)' }}>{s.value}</div>
+              <div style={{ fontSize: '11px', color: 'var(--ink-400)', textTransform: 'uppercase', letterSpacing: '0.06em', marginTop: '2px' }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function FAQ() {
   const faqs = [
     {
@@ -781,6 +868,7 @@ export default function Landing() {
       <SafetySection />
       <Architecture />
       <Install />
+      <FlagsmithPromo />
       <FAQ />
       <Footer />
     </>
